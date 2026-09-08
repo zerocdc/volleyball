@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Volleyball Playbook</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #1a202c;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100vh;
+      overflow: hidden;
+      touch-action: none;
+      padding-top: max(10px, env(safe-area-inset-top));
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+    /* Compact Toolbar */
+    #toolbar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 400px;
+      z-index: 100;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 4px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid #4a5568;
+      background: #2d3748;
+      color: #edf2f7;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    button.active {
+      background: #2563eb;
+      border-color: #60a5fa;
+      color: #ffffff;
+    }
+
+    /* Court Board (Vertical 1:2 ratio for portrait iPhone) */
+    #board-container {
+      position: relative;
+      width: min(92vw, 360px);
+      height: min(184vw, 700px, 76vh);
+      background-color: #d97706;
+      border: 4px solid #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      margin: auto 0;
+    }
+
+    /* Court Lines */
+    .court-line {
+      position: absolute;
+      background: #ffffff;
+      pointer-events: none;
+    }
+
+    /* Net across the center */
+    #net {
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #111827;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    #net::before, #net::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 50%;
+      top: -3px;
+    }
+    #net::before { left: -3px; }
+    #net::after { right: -3px; }
+
+    /* Attack Lines */
+    .attack-line-top {
+      top: 33.33%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+    }
+    .attack-line-bottom {
+      top: 66.66%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+    }
+
+    /* Drawing Canvas */
+    #draw-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+    }
+
+    /* Player Tokens */
+    .player {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #ffffff;
+      cursor: grab;
+      touch-action: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+      border: 2px solid #ffffff;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+    }
+
+    .away { background: #dc2626; } /* Red team (Top) */
+    .home { background: #2563eb; } /* Blue team (Bottom) */
+
+    .player:active {
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="toolbar">
+    <button id="mode-move" class="active" onclick="setMode('move')">✋ Move</button>
+    <button id="mode-draw" onclick="setMode('draw')">✏️ Draw</button>
+    <button onclick="clearCanvas()">🧹 Clear</button>
+    <button onclick="resetPositions()">🔄 Reset</button>
+  </div>
+
+  <div id="board-container">
+    <div id="net" class="court-line"></div>
+    <div class="court-line attack-line-top"></div>
+    <div class="court-line attack-line-bottom"></div>
+    <canvas id="draw-layer"></canvas>
+    <div id="players-layer"></div>
+  </div>
+
+  <script>
+    const container = document.getElementById('board-container');
+    const canvas = document.getElementById('draw-layer');
+    const ctx = canvas.getContext('2d');
+    const playersLayer = document.getElementById('players-layer');
+
+    let currentMode = 'move';
+    let isDrawing = false;
+
+    // 5 Players Per Side: 3 Front Row, 2 Back Row
+    const initialPositions = [
+      // Away Team (Top Side - Red)
+      { id: 'A4', label: 'A4', team: 'away', x: 0.22, y: 0.38 }, // Front Left
+      { id: 'A3', label: 'A3', team: 'away', x: 0.50, y: 0.38 }, // Front Mid
+      { id: 'A2', label: 'A2', team: 'away', x: 0.78, y: 0.38 }, // Front Right
+      { id: 'A5', label: 'A5', team: 'away', x: 0.32, y: 0.14 }, // Back Left
+      { id: 'A1', label: 'A1', team: 'away', x: 0.68, y: 0.14 }, // Back Right
+
+      // Home Team (Bottom Side - Blue)
+      { id: 'H4', label: 'P4', team: 'home', x: 0.22, y: 0.62 }, // Front Left
+      { id: 'H3', label: 'P3', team: 'home', x: 0.50, y: 0.62 }, // Front Mid
+      { id: 'H2', label: 'P2', team: 'home', x: 0.78, y: 0.62 }, // Front Right
+      { id: 'H5', label: 'P5', team: 'home', x: 0.32, y: 0.86 }, // Back Left
+      { id: 'H1', label: 'P1', team: 'home', x: 0.68, y: 0.86 }, // Back Right
+    ];
+
+    function initCanvas() {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      ctx.lineWidth = 3.5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#fef08a';
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-move').classList.toggle('active', mode === 'move');
+      document.getElementById('mode-draw').classList.toggle('active', mode === 'draw');
+      canvas.style.pointerEvents = (mode === 'draw') ? 'auto' : 'none';
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function initPlayers() {
+      playersLayer.innerHTML = '';
+      const rect = container.getBoundingClientRect();
+
+      initialPositions.forEach(pos => {
+        const div = document.createElement('div');
+        div.className = `player ${pos.team}`;
+        div.innerText = pos.label;
+        div.style.left = `${pos.x * rect.width}px`;
+        div.style.top = `${pos.y * rect.height}px`;
+
+        makeDraggable(div);
+        playersLayer.appendChild(div);
+      });
+    }
+
+    function resetPositions() {
+      initPlayers();
+    }
+
+    function makeDraggable(el) {
+      let activeTouchId = null;
+
+      function onPointerDown(e) {
+        if (currentMode !== 'move') return;
+        activeTouchId = e.pointerId;
+        el.setPointerCapture(activeTouchId);
+      }
+
+      function onPointerMove(e) {
+        if (e.pointerId !== activeTouchId) return;
+
+        const rect = container.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+
+        x = Math.max(17, Math.min(rect.width - 17, x));
+        y = Math.max(17, Math.min(rect.height - 17, y));
+
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+      }
+
+      function onPointerUp(e) {
+        if (e.pointerId === activeTouchId) {
+          activeTouchId = null;
+        }
+      }
+
+      el.addEventListener('pointerdown', onPointerDown);
+      el.addEventListener('pointermove', onPointerMove);
+      el.addEventListener('pointerup', onPointerUp);
+      el.addEventListener('pointercancel', onPointerUp);
+    }
+
+    function startDraw(e) {
+      if (currentMode !== 'draw') return;
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function draw(e) {
+      if (!isDrawing || currentMode !== 'draw') return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    }
+
+    function stopDraw() {
+      isDrawing = false;
+    }
+
+    canvas.addEventListener('pointerdown', startDraw);
+    canvas.addEventListener('pointermove', draw);
+    canvas.addEventListener('pointerup', stopDraw);
+    canvas.addEventListener('pointercancel', stopDraw);
+
+    window.addEventListener('load', () => {
+      initCanvas();
+      initPlayers();
+      setMode('move');
+    });
+
+    window.addEventListener('resize', () => {
+      initCanvas();
+    });
+  </script>
+</body>
+</html>
