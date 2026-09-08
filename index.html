@@ -26,13 +26,13 @@
       height: 100vh;
       overflow: hidden;
       touch-action: none;
-      padding-top: max(6px, env(safe-area-inset-top));
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      padding-top: max(8px, env(safe-area-inset-top));
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
       padding-left: 8px;
       padding-right: 8px;
     }
 
-    /* Clean Single-Row Top Toolbar */
+    /* Top Toolbar */
     #top-bar {
       width: 100%;
       max-width: 360px;
@@ -41,12 +41,13 @@
       justify-content: space-between;
       gap: 6px;
       z-index: 100;
+      margin-bottom: 4px;
     }
 
     .tool-group {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       background: #1e293b;
       padding: 3px;
       border-radius: 8px;
@@ -57,20 +58,32 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 6px 10px;
+      padding: 6px 9px;
       font-size: 11px;
       font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
       white-space: nowrap;
     }
 
     .tool-group button.active {
       background: #2563eb;
       color: #ffffff;
+    }
+
+    .draw-sub-pill {
+      display: flex;
+      gap: 2px;
+      padding-left: 3px;
+      border-left: 1px solid #475569;
+    }
+
+    .draw-sub-pill button {
+      padding: 4px 6px;
+      font-size: 10px;
     }
 
     .action-group {
@@ -114,85 +127,17 @@
       color: #ffffff;
     }
 
-    /* Outside Court Control Rails */
-    .court-rail {
-      width: min(92vw, 360px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 2px 2px;
-      z-index: 50;
-    }
-
-    .stance-strip {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      padding: 2px;
-      border-radius: 6px;
-    }
-
-    .stance-strip button {
-      border: none;
-      background: transparent;
-      color: #94a3b8;
-      padding: 4px 7px;
-      font-size: 10px;
-      font-weight: 700;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .stance-strip button.active {
-      color: #ffffff;
-    }
-
-    #away-rail .stance-strip button.active {
-      background: #dc2626;
-    }
-
-    #home-rail .stance-strip button.active {
-      background: #2563eb;
-    }
-
-    .blk-subgroup {
-      display: flex;
-      gap: 2px;
-      padding-left: 2px;
-      border-left: 1px solid #475569;
-    }
-
-    .rotate-badge {
-      border: 1px solid #334155;
-      background: #1e293b;
-      color: #f1f5f9;
-      padding: 4px 8px;
-      font-size: 10.5px;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .rotate-badge:active {
-      background: #334155;
-    }
-
     /* Court Board */
     #board-container {
       position: relative;
       width: min(92vw, 360px);
-      height: min(184vw, 680px, 72vh);
+      height: min(184vw, 680px, 78vh);
       background-color: #d4a373;
       border: 3.5px solid #ffffff;
       border-radius: 6px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
       overflow: hidden;
-      margin: 0;
+      margin: auto 0;
     }
 
     .court-line {
@@ -236,6 +181,76 @@
       width: 100%;
       height: 2px;
     }
+
+    /* Inside-Court Stance & Rotation Controls */
+    .on-court-strip {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid #475569;
+      padding: 2.5px;
+      border-radius: 6px;
+      z-index: 30;
+      backdrop-filter: blur(4px);
+    }
+
+    .on-court-strip button {
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 4px 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .on-court-strip button.active {
+      color: #ffffff;
+    }
+
+    #away-stance-pill button.active {
+      background: #dc2626;
+    }
+
+    #home-stance-pill button.active {
+      background: #2563eb;
+    }
+
+    .blk-subgroup {
+      display: flex;
+      gap: 2px;
+      padding-left: 2px;
+      border-left: 1px solid #475569;
+    }
+
+    .on-court-rotate {
+      position: absolute;
+      border: 1px solid #475569;
+      background: rgba(15, 23, 42, 0.88);
+      color: #f1f5f9;
+      padding: 4px 7px;
+      font-size: 10.5px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      z-index: 30;
+      backdrop-filter: blur(4px);
+    }
+
+    .on-court-rotate:active {
+      background: #334155;
+    }
+
+    #away-stance-pill { top: 5px; left: 5px; }
+    #away-rotate-btn { top: 5px; right: 5px; }
+    #home-stance-pill { bottom: 5px; left: 5px; }
+    #home-rotate-btn { bottom: 5px; right: 5px; }
 
     #draw-layer {
       position: absolute;
@@ -342,11 +357,16 @@
 </head>
 <body>
 
-  <!-- Clean Single-Row Top Toolbar -->
+  <!-- Top Toolbar -->
   <div id="top-bar">
     <div class="tool-group">
       <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
-      <button id="draw-cycler" onclick="cycleDrawTool()">✏️ 自由画</button>
+      <button id="mode-draw-btn" onclick="activateDrawMode()">✏️ 画笔</button>
+      <div id="draw-sub-pill" class="draw-sub-pill" style="display: none;">
+        <button id="draw-style-free" class="active" onclick="setDrawStyle('free')">自由</button>
+        <button id="draw-style-solid" onclick="setDrawStyle('solid')">实线</button>
+        <button id="draw-style-dash" onclick="setDrawStyle('dash')">虚线</button>
+      </div>
     </div>
 
     <div class="action-group">
@@ -356,45 +376,41 @@
     </div>
   </div>
 
-  <!-- Away Control Rail (Outside Court Top) -->
-  <div id="away-rail" class="court-rail">
-    <div class="stance-strip">
+  <!-- Court Board -->
+  <div id="board-container">
+    <div id="net" class="court-line"></div>
+    <div class="attack-line-top court-line"></div>
+    <div class="attack-line-bottom court-line"></div>
+
+    <!-- Away Controls (Order: 接, 攻, 防 + [左, 中, 右]) -->
+    <div id="away-stance-pill" class="on-court-strip">
+      <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
+      <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
       <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">防</button>
       <div id="away-blk-wrap" class="blk-subgroup">
         <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
         <button id="away-blk-mid" class="active" onclick="setBlockSide('away', 'mid')">中</button>
         <button id="away-blk-right" onclick="setBlockSide('away', 'right')">右</button>
       </div>
-      <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
-      <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
     </div>
-    <button class="rotate-badge" onclick="rotateTeam('away')">🔄 轮转</button>
-  </div>
+    <button id="away-rotate-btn" class="on-court-rotate" onclick="rotateTeam('away')">🔄 轮转</button>
 
-  <!-- 100% Uncluttered Playing Surface -->
-  <div id="board-container">
-    <div id="net" class="court-line"></div>
-    <div class="attack-line-top court-line"></div>
-    <div class="attack-line-bottom court-line"></div>
-
-    <canvas id="draw-layer"></canvas>
-    <div id="volleyball"></div>
-    <div id="players-layer"></div>
-  </div>
-
-  <!-- Home Control Rail (Outside Court Bottom) -->
-  <div id="home-rail" class="court-rail">
-    <div class="stance-strip">
+    <!-- Home Controls (Order: 接, 攻, 防 + [左, 中, 右]) -->
+    <div id="home-stance-pill" class="on-court-strip">
+      <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
+      <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
       <button id="home-btn-defense" onclick="setTeamStance('home', 'defense')">防</button>
       <div id="home-blk-wrap" class="blk-subgroup" style="display: none;">
         <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
         <button id="home-blk-mid" class="active" onclick="setBlockSide('home', 'mid')">中</button>
         <button id="home-blk-right" onclick="setBlockSide('home', 'right')">右</button>
       </div>
-      <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
-      <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
     </div>
-    <button class="rotate-badge" onclick="rotateTeam('home')">🔄 轮转</button>
+    <button id="home-rotate-btn" class="on-court-rotate" onclick="rotateTeam('home')">🔄 轮转</button>
+
+    <canvas id="draw-layer"></canvas>
+    <div id="volleyball"></div>
+    <div id="players-layer"></div>
   </div>
 
   <script>
@@ -406,18 +422,11 @@
 
     let currentMode = 'move';
     let lineStyle = 'free';
-    const drawModes = [
-      { id: 'free', label: '✏️ 自由画' },
-      { id: 'solid', label: '➔ 实线' },
-      { id: 'dash', label: '⇢ 虚线' }
-    ];
-    let drawModeIdx = 0;
-
     let isDrawing = false;
     let strokes = [];
     let currentStroke = [];
 
-    // Realistic match start: Away = Defense/Serve, Home = Receive
+    // Option A Boot: Away = Defense/Serve, Home = Receive
     let teamStances = {
       away: 'defense',
       home: 'receive'
@@ -548,18 +557,20 @@
     function setInteractionMode(mode) {
       currentMode = mode;
       document.getElementById('mode-move').classList.toggle('active', mode === 'move');
-      document.getElementById('draw-cycler').classList.toggle('active', mode === 'draw');
+      document.getElementById('mode-draw-btn').classList.toggle('active', mode === 'draw');
+      document.getElementById('draw-sub-pill').style.display = (mode === 'draw') ? 'flex' : 'none';
       canvas.style.pointerEvents = (mode === 'draw') ? 'auto' : 'none';
     }
 
-    function cycleDrawTool() {
-      if (currentMode !== 'draw') {
-        setInteractionMode('draw');
-        return;
-      }
-      drawModeIdx = (drawModeIdx + 1) % drawModes.length;
-      lineStyle = drawModes[drawModeIdx].id;
-      document.getElementById('draw-cycler').innerText = drawModes[drawModeIdx].label;
+    function activateDrawMode() {
+      setInteractionMode('draw');
+    }
+
+    function setDrawStyle(style) {
+      lineStyle = style;
+      ['free', 'solid', 'dash'].forEach(s => {
+        document.getElementById(`draw-style-${s}`).classList.toggle('active', s === style);
+      });
     }
 
     function getPlayerCoords(p) {
@@ -608,9 +619,9 @@
     function setTeamStance(team, stance) {
       teamStances[team] = stance;
 
-      document.getElementById(`${team}-btn-defense`).classList.toggle('active', stance === 'defense');
-      document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
       document.getElementById(`${team}-btn-receive`).classList.toggle('active', stance === 'receive');
+      document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
+      document.getElementById(`${team}-btn-defense`).classList.toggle('active', stance === 'defense');
 
       const blkWrap = document.getElementById(`${team}-blk-wrap`);
       blkWrap.style.display = (stance === 'defense') ? 'flex' : 'none';
@@ -643,18 +654,18 @@
       teamRotation = { away: 0, home: 0 };
 
       // Away Defense UI
-      document.getElementById('away-btn-defense').classList.add('active');
-      document.getElementById('away-btn-offense').classList.remove('active');
       document.getElementById('away-btn-receive').classList.remove('active');
+      document.getElementById('away-btn-offense').classList.remove('active');
+      document.getElementById('away-btn-defense').classList.add('active');
       document.getElementById('away-blk-wrap').style.display = 'flex';
       ['left', 'mid', 'right'].forEach(s => {
         document.getElementById(`away-blk-${s}`).classList.toggle('active', s === 'mid');
       });
 
       // Home Receive UI
-      document.getElementById('home-btn-defense').classList.remove('active');
-      document.getElementById('home-btn-offense').classList.remove('active');
       document.getElementById('home-btn-receive').classList.add('active');
+      document.getElementById('home-btn-offense').classList.remove('active');
+      document.getElementById('home-btn-defense').classList.remove('active');
       document.getElementById('home-blk-wrap').style.display = 'none';
 
       playersData = [
