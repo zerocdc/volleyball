@@ -125,36 +125,36 @@
       height: 2px;
     }
 
-    /* On-Court Offense/Defense Side Toggles */
+    /* Corner Stance Toggles */
     .side-toggle {
       position: absolute;
-      left: 8px;
+      left: 4px;
       display: flex;
-      flex-direction: column;
-      background: rgba(15, 23, 42, 0.85);
+      flex-direction: row;
+      background: rgba(15, 23, 42, 0.88);
       border: 1px solid #475569;
-      border-radius: 8px;
-      padding: 3px;
-      gap: 3px;
+      border-radius: 6px;
+      padding: 2px;
+      gap: 2px;
       z-index: 20;
       backdrop-filter: blur(4px);
     }
 
     #toggle-away {
-      top: 14%;
+      top: 4px;
     }
 
     #toggle-home {
-      bottom: 14%;
+      bottom: 4px;
     }
 
     .side-toggle button {
-      padding: 5px 8px;
-      font-size: 11px;
+      padding: 4px 6px;
+      font-size: 10.5px;
       border: none;
       background: transparent;
       color: #94a3b8;
-      border-radius: 5px;
+      border-radius: 4px;
     }
 
     .side-toggle button.active {
@@ -162,11 +162,11 @@
     }
 
     #toggle-away button.active {
-      background: #dc2626; /* Red for away team */
+      background: #dc2626;
     }
 
     #toggle-home button.active {
-      background: #2563eb; /* Blue for home team */
+      background: #2563eb;
     }
 
     #draw-layer {
@@ -283,18 +283,17 @@
   </div>
 
   <div id="board-container">
-    <!-- Court Overlay Elements -->
     <div id="net" class="court-line"></div>
     <div class="attack-line-top court-line"></div>
     <div class="attack-line-bottom court-line"></div>
 
-    <!-- Away Team (Top) Mode Toggle -->
+    <!-- Away Team (Top Left Corner) -->
     <div id="toggle-away" class="side-toggle">
       <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">客 攻</button>
       <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">客 防</button>
     </div>
 
-    <!-- Home Team (Bottom) Mode Toggle -->
+    <!-- Home Team (Bottom Left Corner) -->
     <div id="toggle-home" class="side-toggle">
       <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">主 攻</button>
       <button id="home-btn-defense" class="active" onclick="setTeamStance('home', 'defense')">主 防</button>
@@ -318,54 +317,48 @@
     let strokes = [];
     let currentStroke = [];
 
-    // Current Tactical Stance ('defense' = blocking at net, 'offense' = approach off the line)
     let teamStances = {
       away: 'defense',
       home: 'defense'
     };
 
     function getStrokeColor(style) {
-      if (style === 'dash') return '#ffffff'; // White for pass
-      return '#ef4444'; // Red for free draw & runs
+      if (style === 'dash') return '#ffffff'; // White for ball movement
+      if (style === 'free') return '#000000'; // Black for free drawing
+      return '#ef4444';                       // Red for runs
     }
 
-    // Formation slot coordinate mappings:
-    // Slot 0: Left Front, Slot 1: Mid Front, Slot 2: Right Front, Slot 3: Right Back, Slot 4: Left Back
     const formations = {
       away: {
-        // Defensive: Front 3 right up against the net tape for blocks, back 2 digging
         defense: [
-          { x: 0.22, y: 0.46 }, // Front-Left (Tight to Net)
-          { x: 0.50, y: 0.46 }, // Front-Mid (Tight to Net)
-          { x: 0.78, y: 0.46 }, // Front-Right (Tight to Net)
-          { x: 0.72, y: 0.16 }, // Back-Right
-          { x: 0.28, y: 0.16 }  // Back-Left
+          { x: 0.22, y: 0.46 },
+          { x: 0.50, y: 0.46 },
+          { x: 0.78, y: 0.46 },
+          { x: 0.72, y: 0.16 },
+          { x: 0.28, y: 0.16 }
         ],
-        // Offensive: Hitters pull back off the net (beyond attack line) to approach, setter close
         offense: [
-          { x: 0.16, y: 0.26 }, // Left Hitter pulled back to approach
-          { x: 0.58, y: 0.44 }, // Setter target at net
-          { x: 0.84, y: 0.26 }, // Right Hitter pulled back to approach
-          { x: 0.65, y: 0.12 }, // Back Row Pipe / Cover
-          { x: 0.35, y: 0.12 }  // Back Row Cover
+          { x: 0.16, y: 0.26 },
+          { x: 0.58, y: 0.44 },
+          { x: 0.84, y: 0.26 },
+          { x: 0.65, y: 0.12 },
+          { x: 0.35, y: 0.12 }
         ]
       },
       home: {
-        // Defensive: Front 3 tight to the net tape ready to block, back 2 digging
         defense: [
-          { x: 0.22, y: 0.54 }, // Front-Left (Tight to Net)
-          { x: 0.50, y: 0.54 }, // Front-Mid (Tight to Net)
-          { x: 0.78, y: 0.54 }, // Front-Right (Tight to Net)
-          { x: 0.72, y: 0.84 }, // Back-Right
-          { x: 0.28, y: 0.84 }  // Back-Left
+          { x: 0.22, y: 0.54 },
+          { x: 0.50, y: 0.54 },
+          { x: 0.78, y: 0.54 },
+          { x: 0.72, y: 0.84 },
+          { x: 0.28, y: 0.84 }
         ],
-        // Offensive: Hitters pull back off the net (beyond attack line) to approach, setter close
         offense: [
-          { x: 0.16, y: 0.74 }, // Left Hitter pulled back to approach
-          { x: 0.58, y: 0.56 }, // Setter target at net
-          { x: 0.84, y: 0.74 }, // Right Hitter pulled back to approach
-          { x: 0.65, y: 0.88 }, // Back Row Pipe / Cover
-          { x: 0.35, y: 0.88 }  // Back Row Cover
+          { x: 0.16, y: 0.74 },
+          { x: 0.58, y: 0.56 },
+          { x: 0.84, y: 0.74 },
+          { x: 0.65, y: 0.88 },
+          { x: 0.35, y: 0.88 }
         ]
       }
     };
@@ -424,11 +417,9 @@
       teamStances[team] = stance;
       const rect = container.getBoundingClientRect();
 
-      // Update button highlights
       document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
       document.getElementById(`${team}-btn-defense`).classList.toggle('active', stance === 'defense');
 
-      // Slide players into offense or defense positions
       playersData.filter(p => p.team === team).forEach(p => {
         const el = document.getElementById(p.id);
         const coords = formations[team][stance][p.slotIndex];
