@@ -214,11 +214,9 @@
       transition: none;
     }
 
-    /* Base team shades */
     .away { background: #dc2626; }
     .home { background: #2563eb; }
 
-    /* Lighter setter shades for players labeled 3 and 5 */
     .away.setter { 
       background: #f87171; 
       color: #ffffff;
@@ -334,39 +332,41 @@
     };
 
     function getStrokeColor(style) {
-      if (style === 'dash') return '#ffffff'; // White for ball movement
-      if (style === 'free') return '#000000'; // Black for free drawing
-      return '#ef4444';                       // Red for runs
+      if (style === 'dash') return '#ffffff';
+      if (style === 'free') return '#000000';
+      return '#ef4444';
     }
 
     const formations = {
       away: {
+        // Defensive: y: 0.44 gives exact mirrored distance to home's y: 0.56 without net collision
         defense: [
-          { x: 0.22, y: 0.46 }, // Slot 0
-          { x: 0.50, y: 0.46 }, // Slot 1
-          { x: 0.78, y: 0.46 }, // Slot 2
+          { x: 0.22, y: 0.44 }, // Slot 0
+          { x: 0.50, y: 0.44 }, // Slot 1
+          { x: 0.78, y: 0.44 }, // Slot 2
           { x: 0.72, y: 0.16 }, // Slot 3
           { x: 0.28, y: 0.16 }  // Slot 4
         ],
         offense: [
           { x: 0.16, y: 0.26 }, // Slot 0
-          { x: 0.58, y: 0.44 }, // Slot 1
+          { x: 0.58, y: 0.42 }, // Slot 1
           { x: 0.84, y: 0.26 }, // Slot 2
           { x: 0.65, y: 0.12 }, // Slot 3
           { x: 0.38, y: 0.26 }  // Slot 4
         ]
       },
       home: {
+        // Defensive: y: 0.56 keeps front blockers cleanly below the net
         defense: [
-          { x: 0.22, y: 0.54 }, // Slot 0
-          { x: 0.50, y: 0.54 }, // Slot 1
-          { x: 0.78, y: 0.54 }, // Slot 2
+          { x: 0.22, y: 0.56 }, // Slot 0
+          { x: 0.50, y: 0.56 }, // Slot 1
+          { x: 0.78, y: 0.56 }, // Slot 2
           { x: 0.72, y: 0.84 }, // Slot 3
           { x: 0.28, y: 0.84 }  // Slot 4
         ],
         offense: [
           { x: 0.16, y: 0.74 }, // Slot 0
-          { x: 0.58, y: 0.56 }, // Slot 1
+          { x: 0.58, y: 0.58 }, // Slot 1
           { x: 0.84, y: 0.74 }, // Slot 2
           { x: 0.65, y: 0.88 }, // Slot 3
           { x: 0.38, y: 0.74 }  // Slot 4
@@ -374,7 +374,6 @@
       }
     };
 
-    // Away and Home players labeled 3 and 5 flagged as isSetter
     let playersData = [
       { id: 'A4', label: '客4', team: 'away', slotIndex: 0, isSetter: false },
       { id: 'A3', label: '客3', team: 'away', slotIndex: 1, isSetter: true },
