@@ -107,7 +107,7 @@
       color: #ffffff;
     }
 
-    /* Row 2: Undo & Erase on Left, Reset on Right */
+    /* Row 2: Undo/Erase Left, Reset Right */
     .toolbar-row-secondary {
       display: flex;
       align-items: center;
@@ -139,13 +139,13 @@
       background: #334155;
     }
 
-    .reset-btn {
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      background: rgba(239, 68, 68, 0.15);
-      color: #fca5a5;
+    .text-action-btn {
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f1f5f9;
       font-weight: 700;
       font-size: 11px;
-      padding: 5px 12px;
+      padding: 5px 10px;
       height: 28px;
       border-radius: 6px;
       cursor: pointer;
@@ -155,9 +155,66 @@
       justify-content: center;
     }
 
-    .reset-btn:active {
-      background: rgba(239, 68, 68, 0.3);
-      color: #ffffff;
+    .text-action-btn:active {
+      background: #334155;
+    }
+
+    /* Reset Button with Progress Ring Container */
+    .reset-btn-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      height: 28px;
+    }
+
+    .reset-ring-svg {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      width: 62px;
+      height: 32px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .reset-ring-path {
+      fill: none;
+      stroke: #f87171;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 164;
+      stroke-dashoffset: 164;
+      filter: drop-shadow(0 0 3px rgba(248, 113, 113, 0.7));
+      transition: stroke-dashoffset 0s linear;
+    }
+
+    .reset-btn-wrapper.charging .reset-ring-path {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.7s linear;
+    }
+
+    .reset-btn {
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      font-weight: 700;
+      font-size: 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+
+    .reset-btn-wrapper.charging .reset-btn {
+      background: rgba(239, 68, 68, 0.28);
+      transform: scale(0.96);
     }
 
     /* Court Board */
@@ -405,13 +462,19 @@
       </div>
     </div>
 
-    <!-- Row 2: Undo/Erase Left, Reset Right -->
+    <!-- Row 2: Undo/Erase Left, Reset with Long-Press Progress Ring Right -->
     <div class="toolbar-row-secondary">
       <div class="action-left">
         <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
-        <button class="icon-btn" onclick="clearCanvas()" title="清屏">🗑️</button>
+        <button class="text-action-btn" onclick="clearCanvas()">清屏</button>
       </div>
-      <button class="reset-btn" onclick="resetPositions()">重置</button>
+
+      <div id="reset-wrapper" class="reset-btn-wrapper">
+        <svg class="reset-ring-svg" viewBox="0 0 62 32">
+          <rect class="reset-ring-path" x="2" y="2" width="58" height="28" rx="6" ry="6" />
+        </svg>
+        <button id="reset-btn" class="reset-btn" title="轻触：还原当前战术站位 | 长按：重置整场">重置</button>
+      </div>
     </div>
   </div>
 
@@ -459,13 +522,16 @@
     const playersLayer = document.getElementById('players-layer');
     const ball = document.getElementById('volleyball');
 
+    const resetWrapper = document.getElementById('reset-wrapper');
+    const resetBtn = document.getElementById('reset-btn');
+
     let currentMode = 'move';
     let lineStyle = 'free';
     let isDrawing = false;
     let strokes = [];
     let currentStroke = [];
 
-    // Option A Boot: Away = Defense/Serve, Home = Receive
+    // Option A Match Boot: Away = Defense/Serve, Home = Receive
     let teamStances = {
       away: 'defense',
       home: 'receive'
@@ -645,6 +711,24 @@
       });
     }
 
+    function snapBallToFormation() {
+      const rect = container.getBoundingClientRect();
+      if (teamStances.away === 'defense') {
+        const s1 = playersData.find(p => p.id === 'A1');
+        const coords = getPlayerCoords(s1);
+        ball.style.left = `${coords.x * rect.width}px`;
+        ball.style.top = `${Math.max(18, coords.y * rect.height - 30)}px`;
+      } else if (teamStances.home === 'defense') {
+        const h1 = playersData.find(p => p.id === 'H1');
+        const coords = getPlayerCoords(h1);
+        ball.style.left = `${coords.x * rect.width}px`;
+        ball.style.top = `${Math.min(rect.height - 18, coords.y * rect.height + 30)}px`;
+      } else {
+        ball.style.left = `${rect.width * 0.50}px`;
+        ball.style.top = `${rect.height * 0.50}px`;
+      }
+    }
+
     function updateTeamPositions(team) {
       const rect = container.getBoundingClientRect();
       playersData.filter(p => p.team === team).forEach(p => {
@@ -686,7 +770,15 @@
       updateTeamPositions(team);
     }
 
-    function resetPositions() {
+    // Standard Reset (Tap): Snaps current formation, preserves ink, stances, & rotations
+    function resetToCurrentFormation() {
+      updateTeamPositions('away');
+      updateTeamPositions('home');
+      snapBallToFormation();
+    }
+
+    // Full Match Reset (Long-Press): Reboots game from start
+    function fullMatchReset() {
       const rect = container.getBoundingClientRect();
       teamStances = { away: 'defense', home: 'receive' };
       teamBlockSide = { away: 'mid', home: 'mid' };
@@ -720,11 +812,43 @@
         { id: 'H1', label: '主1', pNum: '1', team: 'home', slotIndex: 3, isSetter: false }
       ];
       renderPlayers();
+      clearCanvas();
 
-      // Ball at server's hand (Away #1)
       ball.style.left = `${rect.width * 0.80}px`;
       ball.style.top = `${rect.height * 0.10}px`;
     }
+
+    // Reset interaction with Ring Animation & Vibration
+    let resetTimer = null;
+    let didLongPress = false;
+
+    function cancelResetCharge() {
+      clearTimeout(resetTimer);
+      resetWrapper.classList.remove('charging');
+    }
+
+    resetBtn.addEventListener('pointerdown', (e) => {
+      didLongPress = false;
+      resetWrapper.classList.add('charging');
+      
+      resetTimer = setTimeout(() => {
+        didLongPress = true;
+        resetWrapper.classList.remove('charging');
+        fullMatchReset();
+        if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+      }, 700);
+    });
+
+    resetBtn.addEventListener('pointerup', () => {
+      cancelResetCharge();
+      if (!didLongPress) {
+        resetToCurrentFormation();
+        if (navigator.vibrate) navigator.vibrate(25);
+      }
+    });
+
+    resetBtn.addEventListener('pointercancel', cancelResetCharge);
+    resetBtn.addEventListener('pointerleave', cancelResetCharge);
 
     function makeDraggable(el, radius = 22) {
       let activeTouchId = null;
@@ -863,7 +987,7 @@
 
     window.addEventListener('load', () => {
       initCanvas();
-      resetPositions();
+      fullMatchReset();
       makeDraggable(ball, 17);
       setInteractionMode('move');
     });
