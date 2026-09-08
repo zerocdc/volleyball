@@ -6,6 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>排球战术板 Pro</title>
+
   <style>
     * {
       box-sizing: border-box;
@@ -32,7 +33,6 @@
       padding-right: 8px;
     }
 
-    /* Tight, Touch-Friendly 2-Row Top Toolbar */
     #top-bar {
       width: 100%;
       max-width: 360px;
@@ -44,7 +44,6 @@
       margin-bottom: 4px;
     }
 
-    /* Row 1: Move + Draw */
     .toolbar-row-primary {
       display: flex;
       align-items: center;
@@ -108,7 +107,6 @@
       color: #ffffff;
     }
 
-    /* Row 2: Undo/Erase Left, Reset Right */
     .toolbar-row-secondary {
       display: flex;
       align-items: center;
@@ -161,7 +159,6 @@
       background: #334155;
     }
 
-    /* Reset Button with Progress Ring Container */
     .reset-btn-wrapper {
       position: relative;
       display: inline-flex;
@@ -219,7 +216,6 @@
       transform: scale(0.96);
     }
 
-    /* Court Board */
     #board-container {
       position: relative;
       width: min(92vw, 360px);
@@ -248,7 +244,8 @@
       z-index: 2;
     }
 
-    #net::before, #net::after {
+    #net::before,
+    #net::after {
       content: '';
       position: absolute;
       width: 10px;
@@ -257,8 +254,14 @@
       border-radius: 50%;
       top: -3px;
     }
-    #net::before { left: -3px; }
-    #net::after { right: -3px; }
+
+    #net::before {
+      left: -3px;
+    }
+
+    #net::after {
+      right: -3px;
+    }
 
     .attack-line-top {
       top: 33.33%;
@@ -274,7 +277,6 @@
       height: 2px;
     }
 
-    /* Inside-Court Stance & Rotation Controls */
     .on-court-strip {
       position: absolute;
       display: flex;
@@ -339,10 +341,25 @@
       background: #334155;
     }
 
-    #away-stance-pill { top: 5px; left: 5px; }
-    #away-rotate-btn { top: 5px; right: 5px; }
-    #home-stance-pill { bottom: 5px; left: 5px; }
-    #home-rotate-btn { bottom: 5px; right: 5px; }
+    #away-stance-pill {
+      top: 5px;
+      left: 5px;
+    }
+
+    #away-rotate-btn {
+      top: 5px;
+      right: 5px;
+    }
+
+    #home-stance-pill {
+      bottom: 5px;
+      left: 5px;
+    }
+
+    #home-rotate-btn {
+      bottom: 5px;
+      right: 5px;
+    }
 
     #draw-layer {
       position: absolute;
@@ -353,7 +370,10 @@
       z-index: 5;
     }
 
-    /* Players */
+    /* -------------------------------- */
+    /* PLAYER DRAG POLISH               */
+    /* -------------------------------- */
+
     .player {
       position: absolute;
       width: 44px;
@@ -367,12 +387,21 @@
       color: #ffffff;
       cursor: grab;
       touch-action: none;
+
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
+
       border: 2px solid #ffffff;
       z-index: 10;
+
       transform: translate(-50%, -50%);
+
       letter-spacing: -0.5px;
-      transition: top 0.35s cubic-bezier(0.25, 1, 0.5, 1), left 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+
+      transition:
+        top 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+        left 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.15s ease;
     }
 
     .player::after {
@@ -386,50 +415,146 @@
     }
 
     .player.dragging {
-      transition: none;
+      transition:
+        transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.12s ease;
+
+      transform:
+        translate(-50%, -50%)
+        translateY(-7px)
+        scale(1.11);
+
+      box-shadow:
+        0 13px 24px rgba(0, 0, 0, 0.48),
+        0 4px 8px rgba(0, 0, 0, 0.28);
+
+      z-index: 60;
+      cursor: grabbing;
     }
 
-    .away { background: #dc2626; }
-    .home { background: #2563eb; }
+    .player.just-dropped {
+      animation: player-drop-spring 240ms cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
 
-    .away.setter { 
-      background: #f87171; 
+    @keyframes player-drop-spring {
+      0% {
+        transform:
+          translate(-50%, -50%)
+          translateY(-5px)
+          scale(1.08);
+      }
+
+      60% {
+        transform:
+          translate(-50%, -50%)
+          scale(0.97);
+      }
+
+      100% {
+        transform:
+          translate(-50%, -50%)
+          scale(1);
+      }
+    }
+
+    .away {
+      background: #dc2626;
+    }
+
+    .home {
+      background: #2563eb;
+    }
+
+    .away.setter {
+      background: #f87171;
       color: #ffffff;
     }
-    .home.setter { 
-      background: #60a5fa; 
+
+    .home.setter {
+      background: #60a5fa;
       color: #ffffff;
     }
 
-    .player:active {
-      transform: translate(-50%, -50%) scale(1.15);
-    }
+    /* -------------------------------- */
+    /* BALL DRAG POLISH                 */
+    /* -------------------------------- */
 
-    /* Volleyball */
     #volleyball {
       position: absolute;
       width: 34px;
       height: 34px;
       border-radius: 50%;
+
       background: conic-gradient(
-        #ffffff 0deg 60deg, 
-        #facc15 60deg 120deg, 
-        #2563eb 120deg 180deg, 
-        #ffffff 180deg 240deg, 
-        #facc15 240deg 300deg, 
+        #ffffff 0deg 60deg,
+        #facc15 60deg 120deg,
+        #2563eb 120deg 180deg,
+        #ffffff 180deg 240deg,
+        #facc15 240deg 300deg,
         #2563eb 300deg 360deg
       );
+
       border: 2px solid #0f172a;
+
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.65);
+
       z-index: 15;
+
       transform: translate(-50%, -50%);
+
       cursor: grab;
+
       touch-action: none;
-      transition: top 0.35s ease, left 0.35s ease;
+
+      transition:
+        top 0.35s ease,
+        left 0.35s ease,
+        transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.15s ease;
     }
 
     #volleyball.dragging {
-      transition: none;
+      transition:
+        transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.12s ease;
+
+      transform:
+        translate(-50%, -50%)
+        translateY(-6px)
+        scale(1.14);
+
+      box-shadow:
+        0 12px 20px rgba(0, 0, 0, 0.48),
+        0 3px 6px rgba(0, 0, 0, 0.32);
+
+      z-index: 70;
+
+      cursor: grabbing;
+    }
+
+    #volleyball.just-dropped {
+      animation: ball-drop-spring 240ms cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+
+    @keyframes ball-drop-spring {
+      0% {
+        transform:
+          translate(-50%, -50%)
+          translateY(-4px)
+          scale(1.1);
+      }
+
+      60% {
+        transform:
+          translate(-50%, -50%)
+          scale(0.96);
+      }
+
+      100% {
+        transform:
+          translate(-50%, -50%)
+          scale(1);
+      }
     }
 
     #volleyball::after {
@@ -441,99 +566,295 @@
       bottom: -8px;
       border-radius: 50%;
     }
-
-    #volleyball:active {
-      transform: translate(-50%, -50%) scale(1.2);
-    }
   </style>
 </head>
+
 <body>
 
-  <!-- Touch-Friendly 2-Row Top Toolbar -->
   <div id="top-bar">
-    <!-- Row 1: Move & Draw (with expandable line pill) -->
+
     <div class="toolbar-row-primary">
       <div class="tool-group">
-        <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
-        <button id="mode-draw-btn" onclick="activateDrawMode()">✏️ 画笔</button>
-        <div id="draw-sub-pill" class="draw-sub-pill" style="display: none;">
-          <button id="draw-style-free" class="active" onclick="setDrawStyle('free')">自由</button>
-          <button id="draw-style-solid" onclick="setDrawStyle('solid')">实线</button>
-          <button id="draw-style-dash" onclick="setDrawStyle('dash')">虚线</button>
+
+        <button
+          id="mode-move"
+          class="active"
+          onclick="setInteractionMode('move')"
+        >
+          ✋ 移动
+        </button>
+
+        <button
+          id="mode-draw-btn"
+          onclick="activateDrawMode()"
+        >
+          ✏️ 画笔
+        </button>
+
+        <div
+          id="draw-sub-pill"
+          class="draw-sub-pill"
+          style="display: none;"
+        >
+
+          <button
+            id="draw-style-free"
+            class="active"
+            onclick="setDrawStyle('free')"
+          >
+            自由
+          </button>
+
+          <button
+            id="draw-style-solid"
+            onclick="setDrawStyle('solid')"
+          >
+            实线
+          </button>
+
+          <button
+            id="draw-style-dash"
+            onclick="setDrawStyle('dash')"
+          >
+            虚线
+          </button>
+
         </div>
       </div>
     </div>
 
-    <!-- Row 2: Undo/Erase Left, Reset Right -->
     <div class="toolbar-row-secondary">
+
       <div class="action-left">
-        <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
-        <button class="text-action-btn" onclick="clearCanvas()">清屏</button>
+
+        <button
+          class="icon-btn"
+          onclick="undoLine()"
+          title="撤销"
+        >
+          ↩
+        </button>
+
+        <button
+          class="text-action-btn"
+          onclick="clearCanvas()"
+        >
+          清屏
+        </button>
+
       </div>
 
-      <div id="reset-wrapper" class="reset-btn-wrapper">
-        <svg class="reset-ring-svg" viewBox="0 0 76 39">
-          <rect class="reset-ring-path" x="2" y="2" width="72" height="35" rx="7" ry="7" />
+      <div
+        id="reset-wrapper"
+        class="reset-btn-wrapper"
+      >
+
+        <svg
+          class="reset-ring-svg"
+          viewBox="0 0 76 39"
+        >
+          <rect
+            class="reset-ring-path"
+            x="2"
+            y="2"
+            width="72"
+            height="35"
+            rx="7"
+            ry="7"
+          />
         </svg>
-        <button id="reset-btn" class="reset-btn" title="轻触：还原当前战术站位并清屏 | 长按：重置整场">重置</button>
+
+        <button
+          id="reset-btn"
+          class="reset-btn"
+          title="轻触：还原当前战术站位并清屏 | 长按：重置整场"
+        >
+          重置
+        </button>
+
       </div>
     </div>
   </div>
 
-  <!-- Court Board (Docked closer to top bar) -->
   <div id="board-container">
-    <div id="net" class="court-line"></div>
-    <div class="attack-line-top court-line"></div>
-    <div class="attack-line-bottom court-line"></div>
 
-    <!-- Away Controls: Order 接, 攻, 防 + [左, 中, 右] -->
-    <div id="away-stance-pill" class="on-court-strip">
-      <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
-      <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
-      <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">防</button>
-      <div id="away-blk-wrap" class="blk-subgroup">
-        <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
-        <button id="away-blk-mid" class="active" onclick="setBlockSide('away', 'mid')">中</button>
-        <button id="away-blk-right" onclick="setBlockSide('away', 'right')">右</button>
+    <div
+      id="net"
+      class="court-line"
+    ></div>
+
+    <div
+      class="attack-line-top court-line"
+    ></div>
+
+    <div
+      class="attack-line-bottom court-line"
+    ></div>
+
+    <div
+      id="away-stance-pill"
+      class="on-court-strip"
+    >
+
+      <button
+        id="away-btn-receive"
+        onclick="setTeamStance('away', 'receive')"
+      >
+        接
+      </button>
+
+      <button
+        id="away-btn-offense"
+        onclick="setTeamStance('away', 'offense')"
+      >
+        攻
+      </button>
+
+      <button
+        id="away-btn-defense"
+        class="active"
+        onclick="setTeamStance('away', 'defense')"
+      >
+        防
+      </button>
+
+      <div
+        id="away-blk-wrap"
+        class="blk-subgroup"
+      >
+
+        <button
+          id="away-blk-left"
+          onclick="setBlockSide('away', 'left')"
+        >
+          左
+        </button>
+
+        <button
+          id="away-blk-mid"
+          class="active"
+          onclick="setBlockSide('away', 'mid')"
+        >
+          中
+        </button>
+
+        <button
+          id="away-blk-right"
+          onclick="setBlockSide('away', 'right')"
+        >
+          右
+        </button>
+
       </div>
     </div>
-    <button id="away-rotate-btn" class="on-court-rotate" onclick="rotateTeam('away')">🔄 轮转</button>
 
-    <!-- Home Controls: Order 接, 攻, 防 + [左, 中, 右] -->
-    <div id="home-stance-pill" class="on-court-strip">
-      <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
-      <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
-      <button id="home-btn-defense" onclick="setTeamStance('home', 'defense')">防</button>
-      <div id="home-blk-wrap" class="blk-subgroup" style="display: none;">
-        <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
-        <button id="home-blk-mid" class="active" onclick="setBlockSide('home', 'mid')">中</button>
-        <button id="home-blk-right" onclick="setBlockSide('home', 'right')">右</button>
+    <button
+      id="away-rotate-btn"
+      class="on-court-rotate"
+      onclick="rotateTeam('away')"
+    >
+      🔄 轮转
+    </button>
+
+    <div
+      id="home-stance-pill"
+      class="on-court-strip"
+    >
+
+      <button
+        id="home-btn-receive"
+        class="active"
+        onclick="setTeamStance('home', 'receive')"
+      >
+        接
+      </button>
+
+      <button
+        id="home-btn-offense"
+        onclick="setTeamStance('home', 'offense')"
+      >
+        攻
+      </button>
+
+      <button
+        id="home-btn-defense"
+        onclick="setTeamStance('home', 'defense')"
+      >
+        防
+      </button>
+
+      <div
+        id="home-blk-wrap"
+        class="blk-subgroup"
+        style="display: none;"
+      >
+
+        <button
+          id="home-blk-left"
+          onclick="setBlockSide('home', 'left')"
+        >
+          左
+        </button>
+
+        <button
+          id="home-blk-mid"
+          class="active"
+          onclick="setBlockSide('home', 'mid')"
+        >
+          中
+        </button>
+
+        <button
+          id="home-blk-right"
+          onclick="setBlockSide('home', 'right')"
+        >
+          右
+        </button>
+
       </div>
     </div>
-    <button id="home-rotate-btn" class="on-court-rotate" onclick="rotateTeam('home')">🔄 轮转</button>
+
+    <button
+      id="home-rotate-btn"
+      class="on-court-rotate"
+      onclick="rotateTeam('home')"
+    >
+      🔄 轮转
+    </button>
 
     <canvas id="draw-layer"></canvas>
+
     <div id="volleyball"></div>
+
     <div id="players-layer"></div>
+
   </div>
 
   <script>
     const container = document.getElementById('board-container');
+
     const canvas = document.getElementById('draw-layer');
+
     const ctx = canvas.getContext('2d');
+
     const playersLayer = document.getElementById('players-layer');
+
     const ball = document.getElementById('volleyball');
 
     const resetWrapper = document.getElementById('reset-wrapper');
+
     const resetBtn = document.getElementById('reset-btn');
 
     let currentMode = 'move';
+
     let lineStyle = 'free';
+
     let isDrawing = false;
+
     let strokes = [];
+
     let currentStroke = [];
 
-    // Option A Match Boot: Away = Defense/Serve, Home = Receive
     let teamStances = {
       away: 'defense',
       home: 'receive'
@@ -550,13 +871,22 @@
     };
 
     function getStrokeColor(style) {
-      if (style === 'dash') return '#ffffff';
-      if (style === 'free') return '#000000';
+
+      if (style === 'dash') {
+        return '#ffffff';
+      }
+
+      if (style === 'free') {
+        return '#000000';
+      }
+
       return '#ef4444';
     }
 
     const defenseFormations = {
+
       away: {
+
         left: [
           { x: 0.20, y: 0.44 },
           { x: 0.33, y: 0.44 },
@@ -564,6 +894,7 @@
           { x: 0.90, y: 0.26 },
           { x: 0.10, y: 0.30 }
         ],
+
         mid: [
           { x: 0.35, y: 0.44 },
           { x: 0.50, y: 0.44 },
@@ -571,6 +902,7 @@
           { x: 0.80, y: 0.18 },
           { x: 0.20, y: 0.18 }
         ],
+
         right: [
           { x: 0.54, y: 0.44 },
           { x: 0.67, y: 0.44 },
@@ -579,7 +911,9 @@
           { x: 0.10, y: 0.26 }
         ]
       },
+
       home: {
+
         left: [
           { x: 0.20, y: 0.56 },
           { x: 0.33, y: 0.56 },
@@ -587,6 +921,7 @@
           { x: 0.90, y: 0.74 },
           { x: 0.10, y: 0.70 }
         ],
+
         mid: [
           { x: 0.35, y: 0.56 },
           { x: 0.50, y: 0.56 },
@@ -594,6 +929,7 @@
           { x: 0.80, y: 0.82 },
           { x: 0.20, y: 0.82 }
         ],
+
         right: [
           { x: 0.54, y: 0.56 },
           { x: 0.67, y: 0.56 },
@@ -605,7 +941,9 @@
     };
 
     const staticFormations = {
+
       away: {
+
         offense: [
           { x: 0.08, y: 0.26 },
           { x: 0.58, y: 0.42 },
@@ -614,7 +952,9 @@
           { x: 0.38, y: 0.26 }
         ]
       },
+
       home: {
+
         offense: [
           { x: 0.08, y: 0.74 },
           { x: 0.58, y: 0.58 },
@@ -626,365 +966,1155 @@
     };
 
     const homeReceiveFormations = [
-      { '1': { x: 0.64, y: 0.87 }, '2': { x: 0.78, y: 0.72 }, '3': { x: 0.50, y: 0.55 }, '4': { x: 0.22, y: 0.72 }, '5': { x: 0.50, y: 0.74 } },
-      { '1': { x: 0.50, y: 0.74 }, '2': { x: 0.68, y: 0.87 }, '3': { x: 0.82, y: 0.55 }, '4': { x: 0.76, y: 0.72 }, '5': { x: 0.22, y: 0.72 } },
-      { '1': { x: 0.22, y: 0.72 }, '2': { x: 0.50, y: 0.74 }, '3': { x: 0.68, y: 0.87 }, '4': { x: 0.78, y: 0.72 }, '5': { x: 0.50, y: 0.55 } },
-      { '1': { x: 0.76, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.50, y: 0.74 }, '4': { x: 0.68, y: 0.87 }, '5': { x: 0.82, y: 0.55 } },
-      { '1': { x: 0.78, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.16, y: 0.55 }, '4': { x: 0.50, y: 0.74 }, '5': { x: 0.68, y: 0.87 } }
+
+      {
+        '1': { x: 0.64, y: 0.87 },
+        '2': { x: 0.78, y: 0.72 },
+        '3': { x: 0.50, y: 0.55 },
+        '4': { x: 0.22, y: 0.72 },
+        '5': { x: 0.50, y: 0.74 }
+      },
+
+      {
+        '1': { x: 0.50, y: 0.74 },
+        '2': { x: 0.68, y: 0.87 },
+        '3': { x: 0.82, y: 0.55 },
+        '4': { x: 0.76, y: 0.72 },
+        '5': { x: 0.22, y: 0.72 }
+      },
+
+      {
+        '1': { x: 0.22, y: 0.72 },
+        '2': { x: 0.50, y: 0.74 },
+        '3': { x: 0.68, y: 0.87 },
+        '4': { x: 0.78, y: 0.72 },
+        '5': { x: 0.50, y: 0.55 }
+      },
+
+      {
+        '1': { x: 0.76, y: 0.72 },
+        '2': { x: 0.22, y: 0.72 },
+        '3': { x: 0.50, y: 0.74 },
+        '4': { x: 0.68, y: 0.87 },
+        '5': { x: 0.82, y: 0.55 }
+      },
+
+      {
+        '1': { x: 0.78, y: 0.72 },
+        '2': { x: 0.22, y: 0.72 },
+        '3': { x: 0.16, y: 0.55 },
+        '4': { x: 0.50, y: 0.74 },
+        '5': { x: 0.68, y: 0.87 }
+      }
+
     ];
 
     const awayReceiveFormations = homeReceiveFormations.map(rot => {
+
       const mirrored = {};
+
       for (const [pNum, pos] of Object.entries(rot)) {
-        mirrored[pNum] = { x: pos.x, y: (1 - pos.y) - 0.03 };
+
+        mirrored[pNum] = {
+          x: pos.x,
+          y: (1 - pos.y) - 0.03
+        };
       }
+
       return mirrored;
     });
 
     let playersData = [
-      { id: 'A4', label: '客4', pNum: '4', team: 'away', slotIndex: 0, isSetter: false },
-      { id: 'A3', label: '客3', pNum: '3', team: 'away', slotIndex: 1, isSetter: true },
-      { id: 'A2', label: '客2', pNum: '2', team: 'away', slotIndex: 2, isSetter: false },
-      { id: 'A5', label: '客5', pNum: '5', team: 'away', slotIndex: 4, isSetter: true },
-      { id: 'A1', label: '客1', pNum: '1', team: 'away', slotIndex: 3, isSetter: false },
 
-      { id: 'H4', label: '主4', pNum: '4', team: 'home', slotIndex: 0, isSetter: false },
-      { id: 'H3', label: '主3', pNum: '3', team: 'home', slotIndex: 1, isSetter: true },
-      { id: 'H2', label: '主2', pNum: '2', team: 'home', slotIndex: 2, isSetter: false },
-      { id: 'H5', label: '主5', pNum: '5', team: 'home', slotIndex: 4, isSetter: true },
-      { id: 'H1', label: '主1', pNum: '1', team: 'home', slotIndex: 3, isSetter: false }
+      {
+        id: 'A4',
+        label: '客4',
+        pNum: '4',
+        team: 'away',
+        slotIndex: 0,
+        isSetter: false
+      },
+
+      {
+        id: 'A3',
+        label: '客3',
+        pNum: '3',
+        team: 'away',
+        slotIndex: 1,
+        isSetter: true
+      },
+
+      {
+        id: 'A2',
+        label: '客2',
+        pNum: '2',
+        team: 'away',
+        slotIndex: 2,
+        isSetter: false
+      },
+
+      {
+        id: 'A5',
+        label: '客5',
+        pNum: '5',
+        team: 'away',
+        slotIndex: 4,
+        isSetter: true
+      },
+
+      {
+        id: 'A1',
+        label: '客1',
+        pNum: '1',
+        team: 'away',
+        slotIndex: 3,
+        isSetter: false
+      },
+
+      {
+        id: 'H4',
+        label: '主4',
+        pNum: '4',
+        team: 'home',
+        slotIndex: 0,
+        isSetter: false
+      },
+
+      {
+        id: 'H3',
+        label: '主3',
+        pNum: '3',
+        team: 'home',
+        slotIndex: 1,
+        isSetter: true
+      },
+
+      {
+        id: 'H2',
+        label: '主2',
+        pNum: '2',
+        team: 'home',
+        slotIndex: 2,
+        isSetter: false
+      },
+
+      {
+        id: 'H5',
+        label: '主5',
+        pNum: '5',
+        team: 'home',
+        slotIndex: 4,
+        isSetter: true
+      },
+
+      {
+        id: 'H1',
+        label: '主1',
+        pNum: '1',
+        team: 'home',
+        slotIndex: 3,
+        isSetter: false
+      }
+
     ];
 
     function initCanvas() {
+
       canvas.width = container.clientWidth;
+
       canvas.height = container.clientHeight;
+
       redrawAllStrokes();
     }
 
     function setInteractionMode(mode) {
+
       currentMode = mode;
-      document.getElementById('mode-move').classList.toggle('active', mode === 'move');
-      document.getElementById('mode-draw-btn').classList.toggle('active', mode === 'draw');
-      document.getElementById('draw-sub-pill').style.display = (mode === 'draw') ? 'flex' : 'none';
-      canvas.style.pointerEvents = (mode === 'draw') ? 'auto' : 'none';
+
+      document
+        .getElementById('mode-move')
+        .classList
+        .toggle('active', mode === 'move');
+
+      document
+        .getElementById('mode-draw-btn')
+        .classList
+        .toggle('active', mode === 'draw');
+
+      document
+        .getElementById('draw-sub-pill')
+        .style
+        .display = mode === 'draw'
+          ? 'flex'
+          : 'none';
+
+      canvas.style.pointerEvents =
+        mode === 'draw'
+          ? 'auto'
+          : 'none';
     }
 
     function activateDrawMode() {
+
       setInteractionMode('draw');
     }
 
     function setDrawStyle(style) {
+
       lineStyle = style;
-      ['free', 'solid', 'dash'].forEach(s => {
-        document.getElementById(`draw-style-${s}`).classList.toggle('active', s === style);
-      });
+
+      ['free', 'solid', 'dash']
+        .forEach(s => {
+
+          document
+            .getElementById(`draw-style-${s}`)
+            .classList
+            .toggle('active', s === style);
+        });
     }
 
     function getPlayerCoords(p) {
+
       const stance = teamStances[p.team];
+
       if (stance === 'defense') {
+
         const blkSide = teamBlockSide[p.team];
+
         return defenseFormations[p.team][blkSide][p.slotIndex];
       }
+
       if (stance === 'receive') {
+
         const rot = teamRotation[p.team];
-        const formationMap = p.team === 'home' ? homeReceiveFormations : awayReceiveFormations;
+
+        const formationMap =
+          p.team === 'home'
+            ? homeReceiveFormations
+            : awayReceiveFormations;
+
         return formationMap[rot][p.pNum];
       }
+
       return staticFormations[p.team][stance][p.slotIndex];
     }
 
     function renderPlayers() {
+
       playersLayer.innerHTML = '';
+
       const rect = container.getBoundingClientRect();
 
       playersData.forEach(p => {
+
         const div = document.createElement('div');
-        div.className = `player ${p.team}${p.isSetter ? ' setter' : ''}`;
+
+        div.className =
+          `player ${p.team}${p.isSetter ? ' setter' : ''}`;
+
         div.id = p.id;
+
         div.innerText = p.label;
 
         const coords = getPlayerCoords(p);
-        div.style.left = `${coords.x * rect.width}px`;
-        div.style.top = `${coords.y * rect.height}px`;
+
+        div.style.left =
+          `${coords.x * rect.width}px`;
+
+        div.style.top =
+          `${coords.y * rect.height}px`;
 
         makeDraggable(div, 22);
+
         playersLayer.appendChild(div);
       });
     }
 
-    // Static dedicated position for volleyball (bottom-right server spot)
     function setBallStaticPosition() {
+
       const rect = container.getBoundingClientRect();
-      ball.style.left = `${rect.width * 0.78}px`;
-      ball.style.top = `${rect.height * 0.93}px`;
+
+      ball.style.left =
+        `${rect.width * 0.78}px`;
+
+      ball.style.top =
+        `${rect.height * 0.93}px`;
     }
 
     function updateTeamPositions(team) {
+
       const rect = container.getBoundingClientRect();
-      playersData.filter(p => p.team === team).forEach(p => {
-        const el = document.getElementById(p.id);
-        const coords = getPlayerCoords(p);
-        el.style.left = `${coords.x * rect.width}px`;
-        el.style.top = `${coords.y * rect.height}px`;
-      });
+
+      playersData
+        .filter(p => p.team === team)
+        .forEach(p => {
+
+          const el =
+            document.getElementById(p.id);
+
+          const coords =
+            getPlayerCoords(p);
+
+          el.style.left =
+            `${coords.x * rect.width}px`;
+
+          el.style.top =
+            `${coords.y * rect.height}px`;
+        });
     }
 
     function setTeamStance(team, stance) {
+
       teamStances[team] = stance;
 
-      document.getElementById(`${team}-btn-receive`).classList.toggle('active', stance === 'receive');
-      document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
-      document.getElementById(`${team}-btn-defense`).classList.toggle('active', stance === 'defense');
+      document
+        .getElementById(`${team}-btn-receive`)
+        .classList
+        .toggle('active', stance === 'receive');
 
-      const blkWrap = document.getElementById(`${team}-blk-wrap`);
-      blkWrap.style.display = (stance === 'defense') ? 'flex' : 'none';
+      document
+        .getElementById(`${team}-btn-offense`)
+        .classList
+        .toggle('active', stance === 'offense');
+
+      document
+        .getElementById(`${team}-btn-defense`)
+        .classList
+        .toggle('active', stance === 'defense');
+
+      const blkWrap =
+        document.getElementById(`${team}-blk-wrap`);
+
+      blkWrap.style.display =
+        stance === 'defense'
+          ? 'flex'
+          : 'none';
 
       updateTeamPositions(team);
     }
 
     function setBlockSide(team, side) {
+
       teamBlockSide[team] = side;
 
-      ['left', 'mid', 'right'].forEach(s => {
-        document.getElementById(`${team}-blk-${s}`).classList.toggle('active', s === side);
-      });
+      ['left', 'mid', 'right']
+        .forEach(s => {
+
+          document
+            .getElementById(`${team}-blk-${s}`)
+            .classList
+            .toggle('active', s === side);
+        });
 
       updateTeamPositions(team);
     }
 
     function rotateTeam(team) {
-      teamRotation[team] = (teamRotation[team] + 1) % 5;
-      playersData.filter(p => p.team === team).forEach(p => {
-        p.slotIndex = (p.slotIndex + 1) % 5;
-      });
+
+      teamRotation[team] =
+        (teamRotation[team] + 1) % 5;
+
+      playersData
+        .filter(p => p.team === team)
+        .forEach(p => {
+
+          p.slotIndex =
+            (p.slotIndex + 1) % 5;
+        });
+
       updateTeamPositions(team);
     }
 
-    // Tap Reset: Snaps current formation, ball to static spot, clears drawings, preserves active stances & rotations
     function resetToCurrentFormation() {
+
       updateTeamPositions('away');
+
       updateTeamPositions('home');
+
       setBallStaticPosition();
+
       clearCanvas();
     }
 
-    // Full Match Reset (Long-Press): Reboots game from start
     function fullMatchReset() {
-      teamStances = { away: 'defense', home: 'receive' };
-      teamBlockSide = { away: 'mid', home: 'mid' };
-      teamRotation = { away: 0, home: 0 };
 
-      // Away Defense UI
-      document.getElementById('away-btn-receive').classList.remove('active');
-      document.getElementById('away-btn-offense').classList.remove('active');
-      document.getElementById('away-btn-defense').classList.add('active');
-      document.getElementById('away-blk-wrap').style.display = 'flex';
-      ['left', 'mid', 'right'].forEach(s => {
-        document.getElementById(`away-blk-${s}`).classList.toggle('active', s === 'mid');
-      });
+      teamStances = {
+        away: 'defense',
+        home: 'receive'
+      };
 
-      // Home Receive UI
-      document.getElementById('home-btn-receive').classList.add('active');
-      document.getElementById('home-btn-offense').classList.remove('active');
-      document.getElementById('home-btn-defense').classList.remove('active');
-      document.getElementById('home-blk-wrap').style.display = 'none';
+      teamBlockSide = {
+        away: 'mid',
+        home: 'mid'
+      };
+
+      teamRotation = {
+        away: 0,
+        home: 0
+      };
+
+      document
+        .getElementById('away-btn-receive')
+        .classList
+        .remove('active');
+
+      document
+        .getElementById('away-btn-offense')
+        .classList
+        .remove('active');
+
+      document
+        .getElementById('away-btn-defense')
+        .classList
+        .add('active');
+
+      document
+        .getElementById('away-blk-wrap')
+        .style
+        .display = 'flex';
+
+      ['left', 'mid', 'right']
+        .forEach(s => {
+
+          document
+            .getElementById(`away-blk-${s}`)
+            .classList
+            .toggle('active', s === 'mid');
+        });
+
+      document
+        .getElementById('home-btn-receive')
+        .classList
+        .add('active');
+
+      document
+        .getElementById('home-btn-offense')
+        .classList
+        .remove('active');
+
+      document
+        .getElementById('home-btn-defense')
+        .classList
+        .remove('active');
+
+      document
+        .getElementById('home-blk-wrap')
+        .style
+        .display = 'none';
 
       playersData = [
-        { id: 'A4', label: '客4', pNum: '4', team: 'away', slotIndex: 0, isSetter: false },
-        { id: 'A3', label: '客3', pNum: '3', team: 'away', slotIndex: 1, isSetter: true },
-        { id: 'A2', label: '客2', pNum: '2', team: 'away', slotIndex: 2, isSetter: false },
-        { id: 'A5', label: '客5', pNum: '5', team: 'away', slotIndex: 4, isSetter: true },
-        { id: 'A1', label: '客1', pNum: '1', team: 'away', slotIndex: 3, isSetter: false },
-        { id: 'H4', label: '主4', pNum: '4', team: 'home', slotIndex: 0, isSetter: false },
-        { id: 'H3', label: '主3', pNum: '3', team: 'home', slotIndex: 1, isSetter: true },
-        { id: 'H2', label: '主2', pNum: '2', team: 'home', slotIndex: 2, isSetter: false },
-        { id: 'H5', label: '主5', pNum: '5', team: 'home', slotIndex: 4, isSetter: true },
-        { id: 'H1', label: '主1', pNum: '1', team: 'home', slotIndex: 3, isSetter: false }
+
+        {
+          id: 'A4',
+          label: '客4',
+          pNum: '4',
+          team: 'away',
+          slotIndex: 0,
+          isSetter: false
+        },
+
+        {
+          id: 'A3',
+          label: '客3',
+          pNum: '3',
+          team: 'away',
+          slotIndex: 1,
+          isSetter: true
+        },
+
+        {
+          id: 'A2',
+          label: '客2',
+          pNum: '2',
+          team: 'away',
+          slotIndex: 2,
+          isSetter: false
+        },
+
+        {
+          id: 'A5',
+          label: '客5',
+          pNum: '5',
+          team: 'away',
+          slotIndex: 4,
+          isSetter: true
+        },
+
+        {
+          id: 'A1',
+          label: '客1',
+          pNum: '1',
+          team: 'away',
+          slotIndex: 3,
+          isSetter: false
+        },
+
+        {
+          id: 'H4',
+          label: '主4',
+          pNum: '4',
+          team: 'home',
+          slotIndex: 0,
+          isSetter: false
+        },
+
+        {
+          id: 'H3',
+          label: '主3',
+          pNum: '3',
+          team: 'home',
+          slotIndex: 1,
+          isSetter: true
+        },
+
+        {
+          id: 'H2',
+          label: '主2',
+          pNum: '2',
+          team: 'home',
+          slotIndex: 2,
+          isSetter: false
+        },
+
+        {
+          id: 'H5',
+          label: '主5',
+          pNum: '5',
+          team: 'home',
+          slotIndex: 4,
+          isSetter: true
+        },
+
+        {
+          id: 'H1',
+          label: '主1',
+          pNum: '1',
+          team: 'home',
+          slotIndex: 3,
+          isSetter: false
+        }
+
       ];
+
       renderPlayers();
+
       clearCanvas();
+
       setBallStaticPosition();
     }
 
-    // Reset interaction: extended long-press duration (1.4s)
     let resetTimer = null;
+
     let didLongPress = false;
 
     function cancelResetCharge() {
+
       clearTimeout(resetTimer);
-      resetWrapper.classList.remove('charging');
+
+      resetWrapper
+        .classList
+        .remove('charging');
     }
 
-    resetBtn.addEventListener('pointerdown', () => {
-      didLongPress = false;
-      resetWrapper.classList.add('charging');
-      
-      resetTimer = setTimeout(() => {
-        didLongPress = true;
-        resetWrapper.classList.remove('charging');
-        fullMatchReset();
-        if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
-      }, 1400);
-    });
+    resetBtn.addEventListener(
+      'pointerdown',
+      () => {
 
-    resetBtn.addEventListener('pointerup', () => {
-      cancelResetCharge();
-      if (!didLongPress) {
-        resetToCurrentFormation();
-        if (navigator.vibrate) navigator.vibrate(25);
+        didLongPress = false;
+
+        resetWrapper
+          .classList
+          .add('charging');
+
+        resetTimer =
+          setTimeout(() => {
+
+            didLongPress = true;
+
+            resetWrapper
+              .classList
+              .remove('charging');
+
+            fullMatchReset();
+
+            if (navigator.vibrate) {
+              navigator.vibrate([40, 60, 40]);
+            }
+
+          }, 1400);
       }
-    });
+    );
 
-    resetBtn.addEventListener('pointercancel', cancelResetCharge);
-    resetBtn.addEventListener('pointerleave', cancelResetCharge);
+    resetBtn.addEventListener(
+      'pointerup',
+      () => {
+
+        cancelResetCharge();
+
+        if (!didLongPress) {
+
+          resetToCurrentFormation();
+
+          if (navigator.vibrate) {
+            navigator.vibrate(25);
+          }
+        }
+      }
+    );
+
+    resetBtn.addEventListener(
+      'pointercancel',
+      cancelResetCharge
+    );
+
+    resetBtn.addEventListener(
+      'pointerleave',
+      cancelResetCharge
+    );
+
+    /* -------------------------------- */
+    /* IMPROVED DRAG SYSTEM             */
+    /* -------------------------------- */
 
     function makeDraggable(el, radius = 22) {
+
       let activeTouchId = null;
 
-      el.addEventListener('pointerdown', (e) => {
-        if (currentMode !== 'move') return;
-        activeTouchId = e.pointerId;
-        el.setPointerCapture(activeTouchId);
-        el.classList.add('dragging');
-      });
+      let startX = 0;
 
-      el.addEventListener('pointermove', (e) => {
-        if (e.pointerId !== activeTouchId) return;
-        const rect = container.getBoundingClientRect();
-        let x = Math.max(radius, Math.min(rect.width - radius, e.clientX - rect.left));
-        let y = Math.max(radius, Math.min(rect.height - radius, e.clientY - rect.top));
-        el.style.left = `${x}px`;
-        el.style.top = `${y}px`;
-      });
+      let startY = 0;
 
-      function onEnd(e) {
-        if (e.pointerId === activeTouchId) {
-          activeTouchId = null;
-          el.classList.remove('dragging');
+      let hasStartedDragging = false;
+
+      const DRAG_THRESHOLD = 3;
+
+      const fingerLift =
+        el.id === 'volleyball'
+          ? 12
+          : 16;
+
+      function vibrate(duration) {
+
+        if (navigator.vibrate) {
+          navigator.vibrate(duration);
         }
       }
 
-      el.addEventListener('pointerup', onEnd);
-      el.addEventListener('pointercancel', onEnd);
+      function beginVisualDrag() {
+
+        if (hasStartedDragging) {
+          return;
+        }
+
+        hasStartedDragging = true;
+
+        el.classList.remove('just-dropped');
+
+        el.classList.add('dragging');
+
+        vibrate(12);
+      }
+
+      el.addEventListener(
+        'pointerdown',
+        e => {
+
+          if (currentMode !== 'move') {
+            return;
+          }
+
+          activeTouchId =
+            e.pointerId;
+
+          startX =
+            e.clientX;
+
+          startY =
+            e.clientY;
+
+          hasStartedDragging = false;
+
+          el.setPointerCapture(
+            activeTouchId
+          );
+        }
+      );
+
+      el.addEventListener(
+        'pointermove',
+        e => {
+
+          if (
+            e.pointerId !== activeTouchId
+          ) {
+            return;
+          }
+
+          const dx =
+            e.clientX - startX;
+
+          const dy =
+            e.clientY - startY;
+
+          const distance =
+            Math.sqrt(
+              dx * dx +
+              dy * dy
+            );
+
+          if (!hasStartedDragging) {
+
+            if (
+              distance <
+              DRAG_THRESHOLD
+            ) {
+              return;
+            }
+
+            beginVisualDrag();
+          }
+
+          const rect =
+            container
+              .getBoundingClientRect();
+
+          let x =
+            e.clientX -
+            rect.left;
+
+          let y =
+            e.clientY -
+            rect.top -
+            fingerLift;
+
+          x =
+            Math.max(
+              radius,
+              Math.min(
+                rect.width - radius,
+                x
+              )
+            );
+
+          y =
+            Math.max(
+              radius,
+              Math.min(
+                rect.height - radius,
+                y
+              )
+            );
+
+          el.style.left =
+            `${x}px`;
+
+          el.style.top =
+            `${y}px`;
+        }
+      );
+
+      function onEnd(e) {
+
+        if (
+          e.pointerId !== activeTouchId
+        ) {
+          return;
+        }
+
+        activeTouchId = null;
+
+        if (
+          hasStartedDragging
+        ) {
+
+          hasStartedDragging = false;
+
+          el.classList.remove(
+            'dragging'
+          );
+
+          el.classList.remove(
+            'just-dropped'
+          );
+
+          void el.offsetWidth;
+
+          el.classList.add(
+            'just-dropped'
+          );
+
+          vibrate(8);
+
+          setTimeout(
+            () => {
+
+              el.classList.remove(
+                'just-dropped'
+              );
+
+            },
+            260
+          );
+        }
+      }
+
+      el.addEventListener(
+        'pointerup',
+        onEnd
+      );
+
+      el.addEventListener(
+        'pointercancel',
+        onEnd
+      );
+
+      el.addEventListener(
+        'lostpointercapture',
+        e => {
+
+          if (
+            e.pointerId ===
+            activeTouchId
+          ) {
+            onEnd(e);
+          }
+        }
+      );
     }
 
     function startDraw(e) {
-      if (currentMode !== 'draw') return;
+
+      if (
+        currentMode !== 'draw'
+      ) {
+        return;
+      }
+
       isDrawing = true;
-      const rect = canvas.getBoundingClientRect();
-      currentStroke = [{
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      }];
+
+      const rect =
+        canvas
+          .getBoundingClientRect();
+
+      currentStroke = [
+        {
+          x:
+            e.clientX -
+            rect.left,
+
+          y:
+            e.clientY -
+            rect.top
+        }
+      ];
     }
 
     function draw(e) {
-      if (!isDrawing || currentMode !== 'draw') return;
-      const rect = canvas.getBoundingClientRect();
-      const pt = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+
+      if (
+        !isDrawing ||
+        currentMode !== 'draw'
+      ) {
+        return;
+      }
+
+      const rect =
+        canvas
+          .getBoundingClientRect();
+
+      const pt = {
+
+        x:
+          e.clientX -
+          rect.left,
+
+        y:
+          e.clientY -
+          rect.top
+      };
+
       currentStroke.push(pt);
 
       redrawAllStrokes();
+
       renderSingleStroke({
-        points: currentStroke,
-        color: getStrokeColor(lineStyle),
-        style: lineStyle
+
+        points:
+          currentStroke,
+
+        color:
+          getStrokeColor(lineStyle),
+
+        style:
+          lineStyle
       });
     }
 
     function stopDraw() {
-      if (!isDrawing) return;
+
+      if (!isDrawing) {
+        return;
+      }
+
       isDrawing = false;
-      if (currentStroke.length > 1) {
+
+      if (
+        currentStroke.length > 1
+      ) {
+
         strokes.push({
-          points: currentStroke,
-          color: getStrokeColor(lineStyle),
-          style: lineStyle
+
+          points:
+            currentStroke,
+
+          color:
+            getStrokeColor(lineStyle),
+
+          style:
+            lineStyle
         });
       }
+
       currentStroke = [];
+
       redrawAllStrokes();
     }
 
-    function drawArrowHead(from, to, color) {
+    function drawArrowHead(
+      from,
+      to,
+      color
+    ) {
+
       const headlen = 11;
-      const dx = to.x - from.x;
-      const dy = to.y - from.y;
-      const angle = Math.atan2(dy, dx);
+
+      const dx =
+        to.x - from.x;
+
+      const dy =
+        to.y - from.y;
+
+      const angle =
+        Math.atan2(dy, dx);
 
       ctx.save();
-      ctx.strokeStyle = color;
-      ctx.fillStyle = color;
+
+      ctx.strokeStyle =
+        color;
+
+      ctx.fillStyle =
+        color;
+
       ctx.lineWidth = 2;
+
       ctx.setLineDash([]);
+
       ctx.beginPath();
-      ctx.moveTo(to.x, to.y);
-      ctx.lineTo(to.x - headlen * Math.cos(angle - Math.PI / 6), to.y - headlen * Math.sin(angle - Math.PI / 6));
-      ctx.lineTo(to.x - headlen * Math.cos(angle + Math.PI / 6), to.y - headlen * Math.sin(angle + Math.PI / 6));
+
+      ctx.moveTo(
+        to.x,
+        to.y
+      );
+
+      ctx.lineTo(
+        to.x -
+          headlen *
+          Math.cos(
+            angle -
+            Math.PI / 6
+          ),
+
+        to.y -
+          headlen *
+          Math.sin(
+            angle -
+            Math.PI / 6
+          )
+      );
+
+      ctx.lineTo(
+        to.x -
+          headlen *
+          Math.cos(
+            angle +
+            Math.PI / 6
+          ),
+
+        to.y -
+          headlen *
+          Math.sin(
+            angle +
+            Math.PI / 6
+          )
+      );
+
       ctx.closePath();
+
       ctx.fill();
+
       ctx.stroke();
+
       ctx.restore();
     }
 
-    function renderSingleStroke(stroke) {
-      const pts = stroke.points;
-      if (pts.length < 2) return;
+    function renderSingleStroke(
+      stroke
+    ) {
+
+      const pts =
+        stroke.points;
+
+      if (
+        pts.length < 2
+      ) {
+        return;
+      }
 
       ctx.save();
-      ctx.strokeStyle = stroke.color;
-      ctx.lineWidth = 3.5;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.setLineDash(stroke.style === 'dash' ? [8, 6] : []);
+
+      ctx.strokeStyle =
+        stroke.color;
+
+      ctx.lineWidth =
+        3.5;
+
+      ctx.lineCap =
+        'round';
+
+      ctx.lineJoin =
+        'round';
+
+      ctx.setLineDash(
+        stroke.style === 'dash'
+          ? [8, 6]
+          : []
+      );
 
       ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
-      for (let i = 1; i < pts.length; i++) {
-        ctx.lineTo(pts[i].x, pts[i].y);
+
+      ctx.moveTo(
+        pts[0].x,
+        pts[0].y
+      );
+
+      for (
+        let i = 1;
+        i < pts.length;
+        i++
+      ) {
+
+        ctx.lineTo(
+          pts[i].x,
+          pts[i].y
+        );
       }
+
       ctx.stroke();
+
       ctx.restore();
 
-      if (stroke.style !== 'free') {
-        const last = pts[pts.length - 1];
-        const prev = pts[Math.max(0, pts.length - 4)];
-        drawArrowHead(prev, last, stroke.color);
+      if (
+        stroke.style !== 'free'
+      ) {
+
+        const last =
+          pts[
+            pts.length - 1
+          ];
+
+        const prev =
+          pts[
+            Math.max(
+              0,
+              pts.length - 4
+            )
+          ];
+
+        drawArrowHead(
+          prev,
+          last,
+          stroke.color
+        );
       }
     }
 
     function redrawAllStrokes() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      strokes.forEach(s => renderSingleStroke(s));
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      strokes.forEach(
+        s =>
+          renderSingleStroke(s)
+      );
     }
 
     function undoLine() {
+
       strokes.pop();
+
       redrawAllStrokes();
     }
 
     function clearCanvas() {
+
       strokes = [];
+
       redrawAllStrokes();
     }
 
-    canvas.addEventListener('pointerdown', startDraw);
-    canvas.addEventListener('pointermove', draw);
-    canvas.addEventListener('pointerup', stopDraw);
-    canvas.addEventListener('pointercancel', stopDraw);
+    canvas.addEventListener(
+      'pointerdown',
+      startDraw
+    );
 
-    window.addEventListener('load', () => {
-      initCanvas();
-      fullMatchReset();
-      makeDraggable(ball, 17);
-      setInteractionMode('move');
-    });
+    canvas.addEventListener(
+      'pointermove',
+      draw
+    );
 
-    window.addEventListener('resize', () => {
-      initCanvas();
-      setBallStaticPosition();
-    });
+    canvas.addEventListener(
+      'pointerup',
+      stopDraw
+    );
+
+    canvas.addEventListener(
+      'pointercancel',
+      stopDraw
+    );
+
+    window.addEventListener(
+      'load',
+      () => {
+
+        initCanvas();
+
+        fullMatchReset();
+
+        makeDraggable(
+          ball,
+          17
+        );
+
+        setInteractionMode(
+          'move'
+        );
+      }
+    );
+
+    window.addEventListener(
+      'resize',
+      () => {
+
+        initCanvas();
+
+        setBallStaticPosition();
+      }
+    );
   </script>
 </body>
 </html>
