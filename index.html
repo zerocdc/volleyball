@@ -2,9 +2,13 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+  >
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <title>排球战术板 Pro</title>
 
   <style>
@@ -17,18 +21,31 @@
       padding: 0;
     }
 
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: #0f172a;
+    }
+
     body {
       background-color: #0f172a;
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      height: 100vh;
+
+      height: 100dvh;
+      min-height: 100dvh;
+
       overflow: hidden;
       touch-action: none;
-      padding-top: max(4px, env(safe-area-inset-top));
-      padding-bottom: max(4px, env(safe-area-inset-bottom));
+
+      padding-top: max(54px, env(safe-area-inset-top));
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
       padding-left: 8px;
       padding-right: 8px;
     }
@@ -36,12 +53,17 @@
     #top-bar {
       width: 100%;
       max-width: 360px;
+
       display: flex;
       flex-direction: column;
       gap: 5px;
+
       z-index: 100;
+
       margin-top: 2px;
       margin-bottom: 4px;
+
+      flex: 0 0 auto;
     }
 
     .toolbar-row-primary {
@@ -55,26 +77,37 @@
       align-items: center;
       width: 100%;
       gap: 4px;
+
       background: #1e293b;
+
       padding: 4px;
+
       border-radius: 8px;
       border: 1px solid #334155;
     }
 
     .tool-group > button {
       flex: 1;
+
       border: none;
       background: transparent;
+
       color: #94a3b8;
+
       padding: 9px 12px;
+
       font-size: 13px;
       font-weight: 700;
+
       border-radius: 6px;
+
       cursor: pointer;
+
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 4px;
+
       white-space: nowrap;
     }
 
@@ -86,19 +119,27 @@
     .draw-sub-pill {
       display: flex;
       gap: 3px;
+
       padding-left: 4px;
+
       border-left: 1px solid #475569;
     }
 
     .draw-sub-pill button {
       border: none;
       background: transparent;
+
       color: #94a3b8;
+
       padding: 8px 10px;
+
       font-size: 11.5px;
       font-weight: 700;
+
       border-radius: 5px;
+
       cursor: pointer;
+
       white-space: nowrap;
     }
 
@@ -122,16 +163,22 @@
 
     .icon-btn {
       border: 1px solid #334155;
+
       background: #1e293b;
       color: #f1f5f9;
+
       width: 44px;
       height: 35px;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       border-radius: 7px;
+
       font-size: 15px;
       font-weight: 800;
+
       cursor: pointer;
     }
 
@@ -141,15 +188,23 @@
 
     .text-action-btn {
       border: 1px solid #334155;
+
       background: #1e293b;
       color: #f1f5f9;
+
       font-weight: 700;
       font-size: 12.5px;
+
       padding: 0 14px;
+
       height: 35px;
+
       border-radius: 7px;
+
       cursor: pointer;
+
       white-space: nowrap;
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -161,54 +216,80 @@
 
     .reset-btn-wrapper {
       position: relative;
+
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       width: 72px;
       height: 35px;
     }
 
     .reset-ring-svg {
       position: absolute;
+
       top: -2px;
       left: -2px;
+
       width: 76px;
       height: 39px;
+
       pointer-events: none;
+
       z-index: 2;
     }
 
     .reset-ring-path {
       fill: none;
+
       stroke: #f87171;
+
       stroke-width: 2.2;
       stroke-linecap: round;
+
       stroke-dasharray: 204;
       stroke-dashoffset: 204;
-      filter: drop-shadow(0 0 3px rgba(248, 113, 113, 0.7));
+
+      filter: drop-shadow(
+        0 0 3px rgba(248, 113, 113, 0.7)
+      );
+
       transition: stroke-dashoffset 0s linear;
     }
 
     .reset-btn-wrapper.charging .reset-ring-path {
       stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1.4s linear;
+
+      transition:
+        stroke-dashoffset 1.4s linear;
     }
 
     .reset-btn {
       width: 100%;
       height: 100%;
+
       border: 1px solid rgba(239, 68, 68, 0.4);
+
       background: rgba(239, 68, 68, 0.15);
+
       color: #fca5a5;
+
       font-weight: 700;
       font-size: 12.5px;
+
       border-radius: 7px;
+
       cursor: pointer;
+
       white-space: nowrap;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.1s ease, background 0.15s ease;
+
+      transition:
+        transform 0.1s ease,
+        background 0.15s ease;
     }
 
     .reset-btn-wrapper.charging .reset-btn {
@@ -218,14 +299,31 @@
 
     #board-container {
       position: relative;
+
       width: min(92vw, 360px);
-      height: min(184vw, 680px, calc(100vh - 104px));
+
+      height: min(
+        184vw,
+        680px,
+        calc(100dvh - 160px)
+      );
+
+      min-height: 420px;
+
       background-color: #d4a373;
+
       border: 3.5px solid #ffffff;
+
       border-radius: 6px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.7);
+
       overflow: hidden;
+
       margin: 0;
+
+      flex: 1 1 auto;
     }
 
     .court-line {
@@ -237,21 +335,31 @@
     #net {
       top: 50%;
       left: 0;
+
       width: 100%;
       height: 4px;
+
       background: #020617;
-      transform: translateY(-50%);
+
+      transform:
+        translateY(-50%);
+
       z-index: 2;
     }
 
     #net::before,
     #net::after {
       content: '';
+
       position: absolute;
+
       width: 10px;
       height: 10px;
+
       background: #cbd5e1;
+
       border-radius: 50%;
+
       top: -3px;
     }
 
@@ -266,6 +374,7 @@
     .attack-line-top {
       top: 33.33%;
       left: 0;
+
       width: 100%;
       height: 2px;
     }
@@ -273,31 +382,48 @@
     .attack-line-bottom {
       top: 66.66%;
       left: 0;
+
       width: 100%;
       height: 2px;
     }
 
     .on-court-strip {
       position: absolute;
+
       display: flex;
       align-items: center;
       gap: 3px;
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid #475569;
+
+      background:
+        rgba(15, 23, 42, 0.88);
+
+      border:
+        1px solid #475569;
+
       padding: 2.5px;
+
       border-radius: 6px;
+
       z-index: 30;
+
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
 
     .on-court-strip button {
       border: none;
+
       background: transparent;
+
       color: #94a3b8;
+
       padding: 4px 6px;
+
       font-size: 10.5px;
       font-weight: 700;
+
       border-radius: 4px;
+
       cursor: pointer;
     }
 
@@ -316,25 +442,39 @@
     .blk-subgroup {
       display: flex;
       gap: 2px;
+
       padding-left: 2px;
+
       border-left: 1px solid #475569;
     }
 
     .on-court-rotate {
       position: absolute;
+
       border: 1px solid #475569;
-      background: rgba(15, 23, 42, 0.88);
+
+      background:
+        rgba(15, 23, 42, 0.88);
+
       color: #f1f5f9;
+
       padding: 4px 7px;
+
       font-size: 10.5px;
       font-weight: 700;
+
       border-radius: 6px;
+
       cursor: pointer;
+
       display: flex;
       align-items: center;
       gap: 2px;
+
       z-index: 30;
+
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
 
     .on-court-rotate:active {
@@ -363,37 +503,46 @@
 
     #draw-layer {
       position: absolute;
+
       top: 0;
       left: 0;
+
       width: 100%;
       height: 100%;
+
       z-index: 5;
     }
 
-    /* -------------------------------- */
-    /* PLAYER DRAG POLISH               */
-    /* -------------------------------- */
-
     .player {
       position: absolute;
+
       width: 44px;
       height: 44px;
+
       border-radius: 50%;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       font-weight: 800;
       font-size: 13.5px;
+
       color: #ffffff;
+
       cursor: grab;
+
       touch-action: none;
 
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
+      box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.55);
 
       border: 2px solid #ffffff;
+
       z-index: 10;
 
-      transform: translate(-50%, -50%);
+      transform:
+        translate(-50%, -50%);
 
       letter-spacing: -0.5px;
 
@@ -406,11 +555,14 @@
 
     .player::after {
       content: '';
+
       position: absolute;
+
       top: -8px;
       left: -8px;
       right: -8px;
       bottom: -8px;
+
       border-radius: 50%;
     }
 
@@ -429,11 +581,15 @@
         0 4px 8px rgba(0, 0, 0, 0.28);
 
       z-index: 60;
+
       cursor: grabbing;
     }
 
     .player.just-dropped {
-      animation: player-drop-spring 240ms cubic-bezier(0.22, 1.35, 0.36, 1);
+      animation:
+        player-drop-spring
+        240ms
+        cubic-bezier(0.22, 1.35, 0.36, 1);
     }
 
     @keyframes player-drop-spring {
@@ -475,32 +631,34 @@
       color: #ffffff;
     }
 
-    /* -------------------------------- */
-    /* BALL DRAG POLISH                 */
-    /* -------------------------------- */
-
     #volleyball {
       position: absolute;
+
       width: 34px;
       height: 34px;
+
       border-radius: 50%;
 
-      background: conic-gradient(
-        #ffffff 0deg 60deg,
-        #facc15 60deg 120deg,
-        #2563eb 120deg 180deg,
-        #ffffff 180deg 240deg,
-        #facc15 240deg 300deg,
-        #2563eb 300deg 360deg
-      );
+      background:
+        conic-gradient(
+          #ffffff 0deg 60deg,
+          #facc15 60deg 120deg,
+          #2563eb 120deg 180deg,
+          #ffffff 180deg 240deg,
+          #facc15 240deg 300deg,
+          #2563eb 300deg 360deg
+        );
 
-      border: 2px solid #0f172a;
+      border:
+        2px solid #0f172a;
 
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.65);
+      box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.65);
 
       z-index: 15;
 
-      transform: translate(-50%, -50%);
+      transform:
+        translate(-50%, -50%);
 
       cursor: grab;
 
@@ -533,7 +691,10 @@
     }
 
     #volleyball.just-dropped {
-      animation: ball-drop-spring 240ms cubic-bezier(0.22, 1.35, 0.36, 1);
+      animation:
+        ball-drop-spring
+        240ms
+        cubic-bezier(0.22, 1.35, 0.36, 1);
     }
 
     @keyframes ball-drop-spring {
@@ -559,11 +720,14 @@
 
     #volleyball::after {
       content: '';
+
       position: absolute;
+
       top: -8px;
       left: -8px;
       right: -8px;
       bottom: -8px;
+
       border-radius: 50%;
     }
   </style>
@@ -831,19 +995,38 @@
   </div>
 
   <script>
-    const container = document.getElementById('board-container');
+    const container =
+      document.getElementById(
+        'board-container'
+      );
 
-    const canvas = document.getElementById('draw-layer');
+    const canvas =
+      document.getElementById(
+        'draw-layer'
+      );
 
-    const ctx = canvas.getContext('2d');
+    const ctx =
+      canvas.getContext('2d');
 
-    const playersLayer = document.getElementById('players-layer');
+    const playersLayer =
+      document.getElementById(
+        'players-layer'
+      );
 
-    const ball = document.getElementById('volleyball');
+    const ball =
+      document.getElementById(
+        'volleyball'
+      );
 
-    const resetWrapper = document.getElementById('reset-wrapper');
+    const resetWrapper =
+      document.getElementById(
+        'reset-wrapper'
+      );
 
-    const resetBtn = document.getElementById('reset-btn');
+    const resetBtn =
+      document.getElementById(
+        'reset-btn'
+      );
 
     let currentMode = 'move';
 
@@ -1006,23 +1189,28 @@
         '4': { x: 0.50, y: 0.74 },
         '5': { x: 0.68, y: 0.87 }
       }
-
     ];
 
-    const awayReceiveFormations = homeReceiveFormations.map(rot => {
+    const awayReceiveFormations =
+      homeReceiveFormations.map(
+        rot => {
 
-      const mirrored = {};
+          const mirrored = {};
 
-      for (const [pNum, pos] of Object.entries(rot)) {
+          for (
+            const [pNum, pos]
+            of Object.entries(rot)
+          ) {
 
-        mirrored[pNum] = {
-          x: pos.x,
-          y: (1 - pos.y) - 0.03
-        };
-      }
+            mirrored[pNum] = {
+              x: pos.x,
+              y: (1 - pos.y) - 0.03
+            };
+          }
 
-      return mirrored;
-    });
+          return mirrored;
+        }
+      );
 
     let playersData = [
 
@@ -1115,14 +1303,15 @@
         slotIndex: 3,
         isSetter: false
       }
-
     ];
 
     function initCanvas() {
 
-      canvas.width = container.clientWidth;
+      canvas.width =
+        container.clientWidth;
 
-      canvas.height = container.clientHeight;
+      canvas.height =
+        container.clientHeight;
 
       redrawAllStrokes();
     }
@@ -1132,21 +1321,34 @@
       currentMode = mode;
 
       document
-        .getElementById('mode-move')
+        .getElementById(
+          'mode-move'
+        )
         .classList
-        .toggle('active', mode === 'move');
+        .toggle(
+          'active',
+          mode === 'move'
+        );
 
       document
-        .getElementById('mode-draw-btn')
+        .getElementById(
+          'mode-draw-btn'
+        )
         .classList
-        .toggle('active', mode === 'draw');
+        .toggle(
+          'active',
+          mode === 'draw'
+        );
 
       document
-        .getElementById('draw-sub-pill')
+        .getElementById(
+          'draw-sub-pill'
+        )
         .style
-        .display = mode === 'draw'
-          ? 'flex'
-          : 'none';
+        .display =
+          mode === 'draw'
+            ? 'flex'
+            : 'none';
 
       canvas.style.pointerEvents =
         mode === 'draw'
@@ -1156,180 +1358,320 @@
 
     function activateDrawMode() {
 
-      setInteractionMode('draw');
+      setInteractionMode(
+        'draw'
+      );
     }
 
     function setDrawStyle(style) {
 
       lineStyle = style;
 
-      ['free', 'solid', 'dash']
-        .forEach(s => {
+      [
+        'free',
+        'solid',
+        'dash'
+      ].forEach(
+        s => {
 
           document
-            .getElementById(`draw-style-${s}`)
+            .getElementById(
+              `draw-style-${s}`
+            )
             .classList
-            .toggle('active', s === style);
-        });
+            .toggle(
+              'active',
+              s === style
+            );
+        }
+      );
     }
 
     function getPlayerCoords(p) {
 
-      const stance = teamStances[p.team];
+      const stance =
+        teamStances[p.team];
 
-      if (stance === 'defense') {
+      if (
+        stance === 'defense'
+      ) {
 
-        const blkSide = teamBlockSide[p.team];
+        const blkSide =
+          teamBlockSide[p.team];
 
-        return defenseFormations[p.team][blkSide][p.slotIndex];
+        return defenseFormations[
+          p.team
+        ][blkSide][p.slotIndex];
       }
 
-      if (stance === 'receive') {
+      if (
+        stance === 'receive'
+      ) {
 
-        const rot = teamRotation[p.team];
+        const rot =
+          teamRotation[p.team];
 
         const formationMap =
           p.team === 'home'
             ? homeReceiveFormations
             : awayReceiveFormations;
 
-        return formationMap[rot][p.pNum];
+        return formationMap[
+          rot
+        ][p.pNum];
       }
 
-      return staticFormations[p.team][stance][p.slotIndex];
+      return staticFormations[
+        p.team
+      ][stance][p.slotIndex];
     }
 
     function renderPlayers() {
 
       playersLayer.innerHTML = '';
 
-      const rect = container.getBoundingClientRect();
+      const rect =
+        container.getBoundingClientRect();
 
-      playersData.forEach(p => {
+      playersData.forEach(
+        p => {
 
-        const div = document.createElement('div');
+          const div =
+            document.createElement(
+              'div'
+            );
 
-        div.className =
-          `player ${p.team}${p.isSetter ? ' setter' : ''}`;
+          div.className =
+            `player ${p.team}${
+              p.isSetter
+                ? ' setter'
+                : ''
+            }`;
 
-        div.id = p.id;
+          div.id = p.id;
 
-        div.innerText = p.label;
-
-        const coords = getPlayerCoords(p);
-
-        div.style.left =
-          `${coords.x * rect.width}px`;
-
-        div.style.top =
-          `${coords.y * rect.height}px`;
-
-        makeDraggable(div, 22);
-
-        playersLayer.appendChild(div);
-      });
-    }
-
-    function setBallStaticPosition() {
-
-      const rect = container.getBoundingClientRect();
-
-      ball.style.left =
-        `${rect.width * 0.78}px`;
-
-      ball.style.top =
-        `${rect.height * 0.93}px`;
-    }
-
-    function updateTeamPositions(team) {
-
-      const rect = container.getBoundingClientRect();
-
-      playersData
-        .filter(p => p.team === team)
-        .forEach(p => {
-
-          const el =
-            document.getElementById(p.id);
+          div.innerText =
+            p.label;
 
           const coords =
             getPlayerCoords(p);
 
-          el.style.left =
-            `${coords.x * rect.width}px`;
+          div.style.left =
+            `${
+              coords.x *
+              rect.width
+            }px`;
 
-          el.style.top =
-            `${coords.y * rect.height}px`;
-        });
+          div.style.top =
+            `${
+              coords.y *
+              rect.height
+            }px`;
+
+          makeDraggable(
+            div,
+            22
+          );
+
+          playersLayer.appendChild(
+            div
+          );
+        }
+      );
     }
 
-    function setTeamStance(team, stance) {
+    function setBallStaticPosition() {
 
-      teamStances[team] = stance;
+      const rect =
+        container
+          .getBoundingClientRect();
+
+      ball.style.left =
+        `${
+          rect.width *
+          0.78
+        }px`;
+
+      ball.style.top =
+        `${
+          rect.height *
+          0.93
+        }px`;
+    }
+
+    function updateTeamPositions(
+      team
+    ) {
+
+      const rect =
+        container
+          .getBoundingClientRect();
+
+      playersData
+        .filter(
+          p =>
+            p.team === team
+        )
+        .forEach(
+          p => {
+
+            const el =
+              document
+                .getElementById(
+                  p.id
+                );
+
+            const coords =
+              getPlayerCoords(
+                p
+              );
+
+            el.style.left =
+              `${
+                coords.x *
+                rect.width
+              }px`;
+
+            el.style.top =
+              `${
+                coords.y *
+                rect.height
+              }px`;
+          }
+        );
+    }
+
+    function setTeamStance(
+      team,
+      stance
+    ) {
+
+      teamStances[
+        team
+      ] = stance;
 
       document
-        .getElementById(`${team}-btn-receive`)
+        .getElementById(
+          `${team}-btn-receive`
+        )
         .classList
-        .toggle('active', stance === 'receive');
+        .toggle(
+          'active',
+          stance === 'receive'
+        );
 
       document
-        .getElementById(`${team}-btn-offense`)
+        .getElementById(
+          `${team}-btn-offense`
+        )
         .classList
-        .toggle('active', stance === 'offense');
+        .toggle(
+          'active',
+          stance === 'offense'
+        );
 
       document
-        .getElementById(`${team}-btn-defense`)
+        .getElementById(
+          `${team}-btn-defense`
+        )
         .classList
-        .toggle('active', stance === 'defense');
+        .toggle(
+          'active',
+          stance === 'defense'
+        );
 
       const blkWrap =
-        document.getElementById(`${team}-blk-wrap`);
+        document
+          .getElementById(
+            `${team}-blk-wrap`
+          );
 
       blkWrap.style.display =
         stance === 'defense'
           ? 'flex'
           : 'none';
 
-      updateTeamPositions(team);
+      updateTeamPositions(
+        team
+      );
     }
 
-    function setBlockSide(team, side) {
+    function setBlockSide(
+      team,
+      side
+    ) {
 
-      teamBlockSide[team] = side;
+      teamBlockSide[
+        team
+      ] = side;
 
-      ['left', 'mid', 'right']
-        .forEach(s => {
+      [
+        'left',
+        'mid',
+        'right'
+      ].forEach(
+        s => {
 
           document
-            .getElementById(`${team}-blk-${s}`)
+            .getElementById(
+              `${team}-blk-${s}`
+            )
             .classList
-            .toggle('active', s === side);
-        });
+            .toggle(
+              'active',
+              s === side
+            );
+        }
+      );
 
-      updateTeamPositions(team);
+      updateTeamPositions(
+        team
+      );
     }
 
-    function rotateTeam(team) {
+    function rotateTeam(
+      team
+    ) {
 
-      teamRotation[team] =
-        (teamRotation[team] + 1) % 5;
+      teamRotation[
+        team
+      ] =
+        (
+          teamRotation[
+            team
+          ] + 1
+        ) % 5;
 
       playersData
-        .filter(p => p.team === team)
-        .forEach(p => {
+        .filter(
+          p =>
+            p.team === team
+        )
+        .forEach(
+          p => {
 
-          p.slotIndex =
-            (p.slotIndex + 1) % 5;
-        });
+            p.slotIndex =
+              (
+                p.slotIndex +
+                1
+              ) % 5;
+          }
+        );
 
-      updateTeamPositions(team);
+      updateTeamPositions(
+        team
+      );
     }
 
     function resetToCurrentFormation() {
 
-      updateTeamPositions('away');
+      updateTeamPositions(
+        'away'
+      );
 
-      updateTeamPositions('home');
+      updateTeamPositions(
+        'home'
+      );
 
       setBallStaticPosition();
 
@@ -1354,53 +1696,93 @@
       };
 
       document
-        .getElementById('away-btn-receive')
+        .getElementById(
+          'away-btn-receive'
+        )
         .classList
-        .remove('active');
+        .remove(
+          'active'
+        );
 
       document
-        .getElementById('away-btn-offense')
+        .getElementById(
+          'away-btn-offense'
+        )
         .classList
-        .remove('active');
+        .remove(
+          'active'
+        );
 
       document
-        .getElementById('away-btn-defense')
+        .getElementById(
+          'away-btn-defense'
+        )
         .classList
-        .add('active');
+        .add(
+          'active'
+        );
 
       document
-        .getElementById('away-blk-wrap')
+        .getElementById(
+          'away-blk-wrap'
+        )
         .style
-        .display = 'flex';
+        .display =
+          'flex';
 
-      ['left', 'mid', 'right']
-        .forEach(s => {
+      [
+        'left',
+        'mid',
+        'right'
+      ].forEach(
+        s => {
 
           document
-            .getElementById(`away-blk-${s}`)
+            .getElementById(
+              `away-blk-${s}`
+            )
             .classList
-            .toggle('active', s === 'mid');
-        });
+            .toggle(
+              'active',
+              s === 'mid'
+            );
+        }
+      );
 
       document
-        .getElementById('home-btn-receive')
+        .getElementById(
+          'home-btn-receive'
+        )
         .classList
-        .add('active');
+        .add(
+          'active'
+        );
 
       document
-        .getElementById('home-btn-offense')
+        .getElementById(
+          'home-btn-offense'
+        )
         .classList
-        .remove('active');
+        .remove(
+          'active'
+        );
 
       document
-        .getElementById('home-btn-defense')
+        .getElementById(
+          'home-btn-defense'
+        )
         .classList
-        .remove('active');
+        .remove(
+          'active'
+        );
 
       document
-        .getElementById('home-blk-wrap')
+        .getElementById(
+          'home-blk-wrap'
+        )
         .style
-        .display = 'none';
+        .display =
+          'none';
 
       playersData = [
 
@@ -1493,7 +1875,6 @@
           slotIndex: 3,
           isSetter: false
         }
-
       ];
 
       renderPlayers();
@@ -1509,39 +1890,62 @@
 
     function cancelResetCharge() {
 
-      clearTimeout(resetTimer);
+      clearTimeout(
+        resetTimer
+      );
 
       resetWrapper
         .classList
-        .remove('charging');
+        .remove(
+          'charging'
+        );
     }
 
     resetBtn.addEventListener(
       'pointerdown',
       () => {
 
-        didLongPress = false;
+        didLongPress =
+          false;
 
         resetWrapper
           .classList
-          .add('charging');
+          .add(
+            'charging'
+          );
 
         resetTimer =
-          setTimeout(() => {
+          setTimeout(
+            () => {
 
-            didLongPress = true;
+              didLongPress =
+                true;
 
-            resetWrapper
-              .classList
-              .remove('charging');
+              resetWrapper
+                .classList
+                .remove(
+                  'charging'
+                );
 
-            fullMatchReset();
+              fullMatchReset();
 
-            if (navigator.vibrate) {
-              navigator.vibrate([40, 60, 40]);
-            }
+              if (
+                navigator.vibrate
+              ) {
 
-          }, 1400);
+                navigator
+                  .vibrate(
+                    [
+                      40,
+                      60,
+                      40
+                    ]
+                  );
+              }
+
+            },
+            1400
+          );
       }
     );
 
@@ -1551,12 +1955,19 @@
 
         cancelResetCharge();
 
-        if (!didLongPress) {
+        if (
+          !didLongPress
+        ) {
 
           resetToCurrentFormation();
 
-          if (navigator.vibrate) {
-            navigator.vibrate(25);
+          if (
+            navigator.vibrate
+          ) {
+
+            navigator.vibrate(
+              25
+            );
           }
         }
       }
@@ -1572,45 +1983,63 @@
       cancelResetCharge
     );
 
-    /* -------------------------------- */
-    /* IMPROVED DRAG SYSTEM             */
-    /* -------------------------------- */
+    function makeDraggable(
+      el,
+      radius = 22
+    ) {
 
-    function makeDraggable(el, radius = 22) {
-
-      let activeTouchId = null;
+      let activeTouchId =
+        null;
 
       let startX = 0;
 
       let startY = 0;
 
-      let hasStartedDragging = false;
+      let hasStartedDragging =
+        false;
 
-      const DRAG_THRESHOLD = 3;
+      const DRAG_THRESHOLD =
+        3;
 
       const fingerLift =
         el.id === 'volleyball'
           ? 12
           : 16;
 
-      function vibrate(duration) {
+      function vibrate(
+        duration
+      ) {
 
-        if (navigator.vibrate) {
-          navigator.vibrate(duration);
+        if (
+          navigator.vibrate
+        ) {
+
+          navigator.vibrate(
+            duration
+          );
         }
       }
 
       function beginVisualDrag() {
 
-        if (hasStartedDragging) {
+        if (
+          hasStartedDragging
+        ) {
           return;
         }
 
-        hasStartedDragging = true;
+        hasStartedDragging =
+          true;
 
-        el.classList.remove('just-dropped');
+        el.classList
+          .remove(
+            'just-dropped'
+          );
 
-        el.classList.add('dragging');
+        el.classList
+          .add(
+            'dragging'
+          );
 
         vibrate(12);
       }
@@ -1619,7 +2048,10 @@
         'pointerdown',
         e => {
 
-          if (currentMode !== 'move') {
+          if (
+            currentMode !==
+            'move'
+          ) {
             return;
           }
 
@@ -1632,7 +2064,8 @@
           startY =
             e.clientY;
 
-          hasStartedDragging = false;
+          hasStartedDragging =
+            false;
 
           el.setPointerCapture(
             activeTouchId
@@ -1645,16 +2078,19 @@
         e => {
 
           if (
-            e.pointerId !== activeTouchId
+            e.pointerId !==
+            activeTouchId
           ) {
             return;
           }
 
           const dx =
-            e.clientX - startX;
+            e.clientX -
+            startX;
 
           const dy =
-            e.clientY - startY;
+            e.clientY -
+            startY;
 
           const distance =
             Math.sqrt(
@@ -1662,7 +2098,9 @@
               dy * dy
             );
 
-          if (!hasStartedDragging) {
+          if (
+            !hasStartedDragging
+          ) {
 
             if (
               distance <
@@ -1691,7 +2129,8 @@
             Math.max(
               radius,
               Math.min(
-                rect.width - radius,
+                rect.width -
+                radius,
                 x
               )
             );
@@ -1700,7 +2139,8 @@
             Math.max(
               radius,
               Math.min(
-                rect.height - radius,
+                rect.height -
+                radius,
                 y
               )
             );
@@ -1716,42 +2156,48 @@
       function onEnd(e) {
 
         if (
-          e.pointerId !== activeTouchId
+          e.pointerId !==
+          activeTouchId
         ) {
           return;
         }
 
-        activeTouchId = null;
+        activeTouchId =
+          null;
 
         if (
           hasStartedDragging
         ) {
 
-          hasStartedDragging = false;
+          hasStartedDragging =
+            false;
 
-          el.classList.remove(
-            'dragging'
-          );
+          el.classList
+            .remove(
+              'dragging'
+            );
 
-          el.classList.remove(
-            'just-dropped'
-          );
+          el.classList
+            .remove(
+              'just-dropped'
+            );
 
           void el.offsetWidth;
 
-          el.classList.add(
-            'just-dropped'
-          );
+          el.classList
+            .add(
+              'just-dropped'
+            );
 
           vibrate(8);
 
           setTimeout(
             () => {
 
-              el.classList.remove(
-                'just-dropped'
-              );
-
+              el.classList
+                .remove(
+                  'just-dropped'
+                );
             },
             260
           );
@@ -1776,6 +2222,7 @@
             e.pointerId ===
             activeTouchId
           ) {
+
             onEnd(e);
           }
         }
@@ -1785,12 +2232,14 @@
     function startDraw(e) {
 
       if (
-        currentMode !== 'draw'
+        currentMode !==
+        'draw'
       ) {
         return;
       }
 
-      isDrawing = true;
+      isDrawing =
+        true;
 
       const rect =
         canvas
@@ -1813,7 +2262,8 @@
 
       if (
         !isDrawing ||
-        currentMode !== 'draw'
+        currentMode !==
+        'draw'
       ) {
         return;
       }
@@ -1833,7 +2283,9 @@
           rect.top
       };
 
-      currentStroke.push(pt);
+      currentStroke.push(
+        pt
+      );
 
       redrawAllStrokes();
 
@@ -1843,7 +2295,9 @@
           currentStroke,
 
         color:
-          getStrokeColor(lineStyle),
+          getStrokeColor(
+            lineStyle
+          ),
 
         style:
           lineStyle
@@ -1852,14 +2306,18 @@
 
     function stopDraw() {
 
-      if (!isDrawing) {
+      if (
+        !isDrawing
+      ) {
         return;
       }
 
-      isDrawing = false;
+      isDrawing =
+        false;
 
       if (
-        currentStroke.length > 1
+        currentStroke.length >
+        1
       ) {
 
         strokes.push({
@@ -1868,7 +2326,9 @@
             currentStroke,
 
           color:
-            getStrokeColor(lineStyle),
+            getStrokeColor(
+              lineStyle
+            ),
 
           style:
             lineStyle
@@ -1886,16 +2346,22 @@
       color
     ) {
 
-      const headlen = 11;
+      const headlen =
+        11;
 
       const dx =
-        to.x - from.x;
+        to.x -
+        from.x;
 
       const dy =
-        to.y - from.y;
+        to.y -
+        from.y;
 
       const angle =
-        Math.atan2(dy, dx);
+        Math.atan2(
+          dy,
+          dx
+        );
 
       ctx.save();
 
@@ -1905,7 +2371,8 @@
       ctx.fillStyle =
         color;
 
-      ctx.lineWidth = 2;
+      ctx.lineWidth =
+        2;
 
       ctx.setLineDash([]);
 
@@ -1985,7 +2452,8 @@
         'round';
 
       ctx.setLineDash(
-        stroke.style === 'dash'
+        stroke.style ===
+        'dash'
           ? [8, 6]
           : []
       );
@@ -1999,7 +2467,8 @@
 
       for (
         let i = 1;
-        i < pts.length;
+        i <
+        pts.length;
         i++
       ) {
 
@@ -2014,19 +2483,22 @@
       ctx.restore();
 
       if (
-        stroke.style !== 'free'
+        stroke.style !==
+        'free'
       ) {
 
         const last =
           pts[
-            pts.length - 1
+            pts.length -
+            1
           ];
 
         const prev =
           pts[
             Math.max(
               0,
-              pts.length - 4
+              pts.length -
+              4
             )
           ];
 
@@ -2049,7 +2521,9 @@
 
       strokes.forEach(
         s =>
-          renderSingleStroke(s)
+          renderSingleStroke(
+            s
+          )
       );
     }
 
