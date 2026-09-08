@@ -320,11 +320,11 @@
     <!-- Home Controls (Bottom Left Corner) -->
     <div id="corner-home" class="corner-control">
       <div id="toggle-home" class="side-toggle">
-        <button id="home-btn-defense" class="active" onclick="setTeamStance('home', 'defense')">防</button>
+        <button id="home-btn-defense" onclick="setTeamStance('home', 'defense')">防</button>
         <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
-        <button id="home-btn-receive" onclick="setTeamStance('home', 'receive')">接</button>
+        <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
       </div>
-      <div id="block-home" class="block-toggle">
+      <div id="block-home" class="block-toggle" style="display: none;">
         <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
         <button id="home-blk-mid" class="active" onclick="setBlockSide('home', 'mid')">中</button>
         <button id="home-blk-right" onclick="setBlockSide('home', 'right')">右</button>
@@ -349,9 +349,10 @@
     let strokes = [];
     let currentStroke = [];
 
+    // Option A Default State: Away = Defense (ready to serve), Home = Receive (ready to receive)
     let teamStances = {
       away: 'defense',
-      home: 'defense'
+      home: 'receive'
     };
 
     let teamBlockSide = {
@@ -370,57 +371,51 @@
       return '#ef4444';
     }
 
-    // Defensive formations keyed strictly by slotIndex:
-    // Slot 0: Front-Left (客4/主4)
-    // Slot 1: Front-Mid (客3/主3)
-    // Slot 2: Front-Right (客2/主2)
-    // Slot 3: Back-Right (客1/主1)
-    // Slot 4: Back-Left (客5/主5)
     const defenseFormations = {
       away: {
         left: [
-          { x: 0.20, y: 0.44 }, // Slot 0: Front Left Block
-          { x: 0.33, y: 0.44 }, // Slot 1: Front Mid Block
-          { x: 0.46, y: 0.44 }, // Slot 2: Front Right Block
-          { x: 0.82, y: 0.16 }, // Slot 3: Back Right Dig
-          { x: 0.18, y: 0.24 }  // Slot 4: Back Left Dig
+          { x: 0.20, y: 0.44 },
+          { x: 0.33, y: 0.44 },
+          { x: 0.46, y: 0.44 },
+          { x: 0.90, y: 0.26 },
+          { x: 0.10, y: 0.30 }
         ],
         mid: [
-          { x: 0.35, y: 0.44 }, // Slot 0
-          { x: 0.50, y: 0.44 }, // Slot 1
-          { x: 0.65, y: 0.44 }, // Slot 2
-          { x: 0.80, y: 0.18 }, // Slot 3
-          { x: 0.20, y: 0.18 }  // Slot 4
+          { x: 0.35, y: 0.44 },
+          { x: 0.50, y: 0.44 },
+          { x: 0.65, y: 0.44 },
+          { x: 0.80, y: 0.18 },
+          { x: 0.20, y: 0.18 }
         ],
         right: [
-          { x: 0.54, y: 0.44 }, // Slot 0: Front Left Block
-          { x: 0.67, y: 0.44 }, // Slot 1: Front Mid Block
-          { x: 0.80, y: 0.44 }, // Slot 2: Front Right Block
-          { x: 0.82, y: 0.24 }, // Slot 3: Back Right Dig
-          { x: 0.18, y: 0.16 }  // Slot 4: Back Left Dig
+          { x: 0.54, y: 0.44 },
+          { x: 0.67, y: 0.44 },
+          { x: 0.80, y: 0.44 },
+          { x: 0.90, y: 0.30 },
+          { x: 0.10, y: 0.26 }
         ]
       },
       home: {
         left: [
-          { x: 0.20, y: 0.56 }, // Slot 0: Front Left Block
-          { x: 0.33, y: 0.56 }, // Slot 1: Front Mid Block
-          { x: 0.46, y: 0.56 }, // Slot 2: Front Right Block
-          { x: 0.82, y: 0.84 }, // Slot 3: Back Right Dig
-          { x: 0.18, y: 0.76 }  // Slot 4: Back Left Dig
+          { x: 0.20, y: 0.56 },
+          { x: 0.33, y: 0.56 },
+          { x: 0.46, y: 0.56 },
+          { x: 0.90, y: 0.74 },
+          { x: 0.10, y: 0.70 }
         ],
         mid: [
-          { x: 0.35, y: 0.56 }, // Slot 0
-          { x: 0.50, y: 0.56 }, // Slot 1
-          { x: 0.65, y: 0.56 }, // Slot 2
-          { x: 0.80, y: 0.82 }, // Slot 3
-          { x: 0.20, y: 0.82 }  // Slot 4
+          { x: 0.35, y: 0.56 },
+          { x: 0.50, y: 0.56 },
+          { x: 0.65, y: 0.56 },
+          { x: 0.80, y: 0.82 },
+          { x: 0.20, y: 0.82 }
         ],
         right: [
-          { x: 0.54, y: 0.56 }, // Slot 0: Front Left Block
-          { x: 0.67, y: 0.56 }, // Slot 1: Front Mid Block
-          { x: 0.80, y: 0.56 }, // Slot 2: Front Right Block
-          { x: 0.82, y: 0.76 }, // Slot 3: Back Right Dig
-          { x: 0.18, y: 0.84 }  // Slot 4: Back Left Dig
+          { x: 0.54, y: 0.56 },
+          { x: 0.67, y: 0.56 },
+          { x: 0.80, y: 0.56 },
+          { x: 0.90, y: 0.70 },
+          { x: 0.10, y: 0.74 }
         ]
       }
     };
@@ -569,20 +564,24 @@
 
     function resetPositions() {
       const rect = container.getBoundingClientRect();
-      teamStances = { away: 'defense', home: 'defense' };
+      teamStances = { away: 'defense', home: 'receive' };
       teamBlockSide = { away: 'mid', home: 'mid' };
       teamRotation = { away: 0, home: 0 };
 
-      ['away', 'home'].forEach(t => {
-        document.getElementById(`${t}-btn-defense`).classList.add('active');
-        document.getElementById(`${t}-btn-offense`).classList.remove('active');
-        document.getElementById(`${t}-btn-receive`).classList.remove('active');
-
-        document.getElementById(`block-${t}`).style.display = 'flex';
-        ['left', 'mid', 'right'].forEach(s => {
-          document.getElementById(`${t}-blk-${s}`).classList.toggle('active', s === 'mid');
-        });
+      // Away UI: Defense Active, Block Visible
+      document.getElementById('away-btn-defense').classList.add('active');
+      document.getElementById('away-btn-offense').classList.remove('active');
+      document.getElementById('away-btn-receive').classList.remove('active');
+      document.getElementById('block-away').style.display = 'flex';
+      ['left', 'mid', 'right'].forEach(s => {
+        document.getElementById(`away-blk-${s}`).classList.toggle('active', s === 'mid');
       });
+
+      // Home UI: Receive Active, Block Hidden
+      document.getElementById('home-btn-defense').classList.remove('active');
+      document.getElementById('home-btn-offense').classList.remove('active');
+      document.getElementById('home-btn-receive').classList.add('active');
+      document.getElementById('block-home').style.display = 'none';
 
       playersData = [
         { id: 'A4', label: '客4', pNum: '4', team: 'away', slotIndex: 0, isSetter: false },
@@ -598,8 +597,9 @@
       ];
       renderPlayers();
 
-      ball.style.left = `${rect.width * 0.8}px`;
-      ball.style.top = `${rect.height * 0.94}px`;
+      // Place volleyball right at the Away server's hand (客1 at back-right)
+      ball.style.left = `${rect.width * 0.82}px`;
+      ball.style.top = `${rect.height * 0.10}px`;
     }
 
     function makeDraggable(el, radius = 23) {
