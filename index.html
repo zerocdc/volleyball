@@ -26,50 +26,59 @@
       height: 100vh;
       overflow: hidden;
       touch-action: none;
-      padding-top: max(8px, env(safe-area-inset-top));
-      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      padding-top: max(6px, env(safe-area-inset-top));
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
       padding-left: 8px;
       padding-right: 8px;
     }
 
-    /* Top Toolbar */
+    /* 2-Row Top Toolbar Container */
     #top-bar {
       width: 100%;
       max-width: 360px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
+      flex-direction: column;
+      gap: 5px;
       z-index: 100;
       margin-bottom: 4px;
+    }
+
+    /* Row 1: Move + Draw with expanding sub-pill */
+    .toolbar-row-primary {
+      display: flex;
+      align-items: center;
+      width: 100%;
     }
 
     .tool-group {
       display: flex;
       align-items: center;
-      gap: 3px;
+      width: 100%;
+      gap: 4px;
       background: #1e293b;
       padding: 3px;
       border-radius: 8px;
       border: 1px solid #334155;
     }
 
-    .tool-group button {
+    .tool-group > button {
+      flex: 1;
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 6px 9px;
-      font-size: 11px;
+      padding: 6px 10px;
+      font-size: 11.5px;
       font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 2px;
+      justify-content: center;
+      gap: 3px;
       white-space: nowrap;
     }
 
-    .tool-group button.active {
+    .tool-group > button.active {
       background: #2563eb;
       color: #ffffff;
     }
@@ -77,16 +86,36 @@
     .draw-sub-pill {
       display: flex;
       gap: 2px;
-      padding-left: 3px;
+      padding-left: 4px;
       border-left: 1px solid #475569;
     }
 
     .draw-sub-pill button {
-      padding: 4px 6px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 5px 7px;
       font-size: 10px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
-    .action-group {
+    .draw-sub-pill button.active {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+
+    /* Row 2: Undo & Erase on Left, Reset on Right */
+    .toolbar-row-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .action-left {
       display: flex;
       align-items: center;
       gap: 4px;
@@ -96,8 +125,8 @@
       border: 1px solid #334155;
       background: #1e293b;
       color: #f1f5f9;
-      width: 32px;
-      height: 30px;
+      width: 34px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -116,10 +145,14 @@
       color: #fca5a5;
       font-weight: 700;
       font-size: 11px;
-      padding: 6px 10px;
+      padding: 5px 12px;
+      height: 28px;
       border-radius: 6px;
       cursor: pointer;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .reset-btn:active {
@@ -131,7 +164,7 @@
     #board-container {
       position: relative;
       width: min(92vw, 360px);
-      height: min(184vw, 680px, 78vh);
+      height: min(184vw, 680px, 75vh);
       background-color: #d4a373;
       border: 3.5px solid #ffffff;
       border-radius: 6px;
@@ -357,21 +390,27 @@
 </head>
 <body>
 
-  <!-- Top Toolbar -->
+  <!-- 2-Row Top Toolbar -->
   <div id="top-bar">
-    <div class="tool-group">
-      <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
-      <button id="mode-draw-btn" onclick="activateDrawMode()">✏️ 画笔</button>
-      <div id="draw-sub-pill" class="draw-sub-pill" style="display: none;">
-        <button id="draw-style-free" class="active" onclick="setDrawStyle('free')">自由</button>
-        <button id="draw-style-solid" onclick="setDrawStyle('solid')">实线</button>
-        <button id="draw-style-dash" onclick="setDrawStyle('dash')">虚线</button>
+    <!-- Row 1: Move & Draw (with expandable line pill) -->
+    <div class="toolbar-row-primary">
+      <div class="tool-group">
+        <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
+        <button id="mode-draw-btn" onclick="activateDrawMode()">✏️ 画笔</button>
+        <div id="draw-sub-pill" class="draw-sub-pill" style="display: none;">
+          <button id="draw-style-free" class="active" onclick="setDrawStyle('free')">自由</button>
+          <button id="draw-style-solid" onclick="setDrawStyle('solid')">实线</button>
+          <button id="draw-style-dash" onclick="setDrawStyle('dash')">虚线</button>
+        </div>
       </div>
     </div>
 
-    <div class="action-group">
-      <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
-      <button class="icon-btn" onclick="clearCanvas()" title="清屏">🗑️</button>
+    <!-- Row 2: Undo/Erase Left, Reset Right -->
+    <div class="toolbar-row-secondary">
+      <div class="action-left">
+        <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
+        <button class="icon-btn" onclick="clearCanvas()" title="清屏">🗑️</button>
+      </div>
       <button class="reset-btn" onclick="resetPositions()">重置</button>
     </div>
   </div>
@@ -382,7 +421,7 @@
     <div class="attack-line-top court-line"></div>
     <div class="attack-line-bottom court-line"></div>
 
-    <!-- Away Controls (Order: 接, 攻, 防 + [左, 中, 右]) -->
+    <!-- Away Controls: Order 接, 攻, 防 + [左, 中, 右] -->
     <div id="away-stance-pill" class="on-court-strip">
       <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
       <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
@@ -395,7 +434,7 @@
     </div>
     <button id="away-rotate-btn" class="on-court-rotate" onclick="rotateTeam('away')">🔄 轮转</button>
 
-    <!-- Home Controls (Order: 接, 攻, 防 + [左, 中, 右]) -->
+    <!-- Home Controls: Order 接, 攻, 防 + [左, 中, 右] -->
     <div id="home-stance-pill" class="on-court-strip">
       <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
       <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
