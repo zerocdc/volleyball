@@ -32,13 +32,12 @@
       padding-right: 8px;
     }
 
-    /* Multi-Row Clean Toolbar */
     #toolbar-container {
       display: flex;
       flex-direction: column;
       gap: 6px;
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
       z-index: 100;
     }
 
@@ -52,7 +51,7 @@
     button {
       flex: 1;
       padding: 7px 2px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       border-radius: 6px;
       border: 1px solid #334155;
@@ -71,17 +70,16 @@
       color: #ffffff;
     }
 
-    /* Color Swatches */
     .color-picker {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
-      padding: 0 4px;
+      padding: 0 2px;
     }
 
     .color-swatch {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       border: 2px solid transparent;
       cursor: pointer;
@@ -93,12 +91,12 @@
       box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
     }
 
-    /* Court Board (Vertical 1:2 ratio) */
+    /* Court Board */
     #board-container {
       position: relative;
       width: min(92vw, 360px);
       height: min(184vw, 680px, 72vh);
-      background-color: #ea580c;
+      background-color: #d4a373;
       border: 4px solid #ffffff;
       border-radius: 6px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
@@ -157,26 +155,37 @@
       z-index: 5;
     }
 
-    /* Player Tokens */
+    /* Enlarged Player Tokens (46px diameter + 54px hit area) */
     .player {
       position: absolute;
-      width: 34px;
-      height: 34px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 11px;
+      font-size: 14px;
       color: #ffffff;
       cursor: grab;
       touch-action: none;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-      border: 2px solid #ffffff;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
+      border: 2.5px solid #ffffff;
       z-index: 10;
       transform: translate(-50%, -50%);
       letter-spacing: -0.5px;
       transition: top 0.25s ease, left 0.25s ease;
+    }
+
+    /* Invisible expanded hit-box for easier thumb grabbing */
+    .player::after {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      border-radius: 50%;
     }
 
     .player.dragging {
@@ -190,11 +199,11 @@
       transform: translate(-50%, -50%) scale(1.15);
     }
 
-    /* Volleyball Token */
+    /* Enlarged Volleyball (36px diameter + expanded hit area) */
     #volleyball {
       position: absolute;
-      width: 28px;
-      height: 28px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: conic-gradient(
         #ffffff 0deg 60deg, 
@@ -204,27 +213,37 @@
         #facc15 240deg 300deg, 
         #2563eb 300deg 360deg
       );
-      border: 2px solid #0f172a;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+      border: 2.5px solid #0f172a;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.65);
       z-index: 15;
       transform: translate(-50%, -50%);
       cursor: grab;
       touch-action: none;
     }
 
+    #volleyball::after {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      border-radius: 50%;
+    }
+
     #volleyball:active {
-      transform: translate(-50%, -50%) scale(1.25);
+      transform: translate(-50%, -50%) scale(1.2);
     }
   </style>
 </head>
 <body>
 
   <div id="toolbar-container">
-    <!-- Row 1: Core Modes & Line Types -->
     <div class="toolbar-row">
       <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
-      <button id="mode-draw-solid" onclick="setInteractionMode('draw', 'solid')">实线 跑动</button>
-      <button id="mode-draw-dash" onclick="setInteractionMode('draw', 'dash')">虚线 传球</button>
+      <button id="mode-draw-free" onclick="setInteractionMode('draw', 'free')">✏️ 自由画</button>
+      <button id="mode-draw-solid" onclick="setInteractionMode('draw', 'solid')">➔ 实线跑动</button>
+      <button id="mode-draw-dash" onclick="setInteractionMode('draw', 'dash')">⇢ 虚线传球</button>
       <div class="color-picker">
         <div class="color-swatch active" style="background:#fef08a;" onclick="setColor('#fef08a', this)"></div>
         <div class="color-swatch" style="background:#ef4444;" onclick="setColor('#ef4444', this)"></div>
@@ -232,7 +251,6 @@
       </div>
     </div>
 
-    <!-- Row 2: Rotation & Undo Actions -->
     <div class="toolbar-row">
       <button onclick="rotateTeam('home')">🔄 我方轮转</button>
       <button onclick="rotateTeam('away')">🔄 对方轮转</button>
@@ -244,8 +262,8 @@
 
   <div id="board-container">
     <div id="net" class="court-line"></div>
-    <div class="attack-line-top"></div>
-    <div class="attack-line-bottom"></div>
+    <div class="attack-line-top court-line"></div>
+    <div class="attack-line-bottom court-line"></div>
     <canvas id="draw-layer"></canvas>
     <div id="volleyball"></div>
     <div id="players-layer"></div>
@@ -258,34 +276,29 @@
     const playersLayer = document.getElementById('players-layer');
     const ball = document.getElementById('volleyball');
 
-    let currentMode = 'move'; // 'move' or 'draw'
-    let lineStyle = 'solid';  // 'solid' or 'dash'
+    let currentMode = 'move';
+    let lineStyle = 'free';
     let strokeColor = '#fef08a';
     let isDrawing = false;
     let strokes = [];
     let currentStroke = [];
 
-    // Rotational Cycle Coordinate Slots (Front-left, Front-mid, Front-right, Back-right, Back-left)
     const slotCoords = {
       away: [
-        { x: 0.22, y: 0.38 }, // Slot 0: Front-Left
-        { x: 0.50, y: 0.38 }, // Slot 1: Front-Mid
-        { x: 0.78, y: 0.38 }, // Slot 2: Front-Right
-        { x: 0.68, y: 0.14 }, // Slot 3: Back-Right
-        { x: 0.32, y: 0.14 }  // Slot 4: Back-Left
+        { x: 0.22, y: 0.38 },
+        { x: 0.50, y: 0.38 },
+        { x: 0.78, y: 0.38 },
+        { x: 0.68, y: 0.14 },
+        { x: 0.32, y: 0.14 }
       ],
       home: [
-        { x: 0.22, y: 0.62 }, // Slot 0: Front-Left
-        { x: 0.50, y: 0.62 }, // Slot 1: Front-Mid
-        { x: 0.78, y: 0.62 }, // Slot 2: Front-Right
-        { x: 0.68, y: 0.86 }, // Slot 3: Back-Right
-        { x: 0.32, y: 0.86 }  // Slot 4: Back-Left
+        { x: 0.22, y: 0.62 },
+        { x: 0.50, y: 0.62 },
+        { x: 0.78, y: 0.62 },
+        { x: 0.68, y: 0.86 },
+        { x: 0.32, y: 0.86 }
       ]
     };
-
-    // Rotation indices: tracks which slot each player currently occupies
-    let awaySlots = [0, 1, 2, 4, 3]; // A4, A3, A2, A5, A1
-    let homeSlots = [0, 1, 2, 4, 3]; // H4, H3, H2, H5, H1
 
     let playersData = [
       { id: 'A4', label: '客4', team: 'away', slotIndex: 0 },
@@ -293,7 +306,6 @@
       { id: 'A2', label: '客2', team: 'away', slotIndex: 2 },
       { id: 'A5', label: '客5', team: 'away', slotIndex: 4 },
       { id: 'A1', label: '客1', team: 'away', slotIndex: 3 },
-
       { id: 'H4', label: '主4', team: 'home', slotIndex: 0 },
       { id: 'H3', label: '主3', team: 'home', slotIndex: 1 },
       { id: 'H2', label: '主2', team: 'home', slotIndex: 2 },
@@ -312,6 +324,7 @@
       if (style) lineStyle = style;
 
       document.getElementById('mode-move').classList.toggle('active', mode === 'move');
+      document.getElementById('mode-draw-free').classList.toggle('active', mode === 'draw' && lineStyle === 'free');
       document.getElementById('mode-draw-solid').classList.toggle('active', mode === 'draw' && lineStyle === 'solid');
       document.getElementById('mode-draw-dash').classList.toggle('active', mode === 'draw' && lineStyle === 'dash');
       canvas.style.pointerEvents = (mode === 'draw') ? 'auto' : 'none';
@@ -337,13 +350,11 @@
         div.style.left = `${coords.x * rect.width}px`;
         div.style.top = `${coords.y * rect.height}px`;
 
-        makeDraggable(div);
+        makeDraggable(div, 23); // 23px radius
         playersLayer.appendChild(div);
       });
     }
 
-    // 5-player Clockwise rotation
-    // 0 (FL) -> 1 (FM) -> 2 (FR) -> 3 (BR) -> 4 (BL) -> 0 (FL)
     function rotateTeam(team) {
       const rect = container.getBoundingClientRect();
       playersData.filter(p => p.team === team).forEach(p => {
@@ -370,12 +381,11 @@
         { id: 'H1', label: '主1', team: 'home', slotIndex: 3 }
       ];
       renderPlayers();
-      // Reset volleyball to server spot
       ball.style.left = `${rect.width * 0.8}px`;
       ball.style.top = `${rect.height * 0.94}px`;
     }
 
-    function makeDraggable(el) {
+    function makeDraggable(el, radius = 23) {
       let activeTouchId = null;
 
       el.addEventListener('pointerdown', (e) => {
@@ -388,8 +398,8 @@
       el.addEventListener('pointermove', (e) => {
         if (e.pointerId !== activeTouchId) return;
         const rect = container.getBoundingClientRect();
-        let x = Math.max(16, Math.min(rect.width - 16, e.clientX - rect.left));
-        let y = Math.max(16, Math.min(rect.height - 16, e.clientY - rect.top));
+        let x = Math.max(radius, Math.min(rect.width - radius, e.clientX - rect.left));
+        let y = Math.max(radius, Math.min(rect.height - radius, e.clientY - rect.top));
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
       });
@@ -405,7 +415,6 @@
       el.addEventListener('pointercancel', onEnd);
     }
 
-    // Drawing with Arrowhead Logic
     function startDraw(e) {
       if (currentMode !== 'draw') return;
       isDrawing = true;
@@ -484,10 +493,11 @@
       ctx.stroke();
       ctx.restore();
 
-      // Add directional arrow pointing to the final point
-      const last = pts[pts.length - 1];
-      const prev = pts[Math.max(0, pts.length - 4)];
-      drawArrowHead(prev, last, stroke.color);
+      if (stroke.style !== 'free') {
+        const last = pts[pts.length - 1];
+        const prev = pts[Math.max(0, pts.length - 4)];
+        drawArrowHead(prev, last, stroke.color);
+      }
     }
 
     function redrawAllStrokes() {
@@ -513,7 +523,7 @@
     window.addEventListener('load', () => {
       initCanvas();
       resetPositions();
-      makeDraggable(ball);
+      makeDraggable(ball, 18);
       setInteractionMode('move');
     });
 
