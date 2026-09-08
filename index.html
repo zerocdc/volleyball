@@ -22,17 +22,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       height: 100vh;
       overflow: hidden;
       touch-action: none;
-      padding-top: max(6px, env(safe-area-inset-top));
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      padding-top: max(4px, env(safe-area-inset-top));
+      padding-bottom: max(4px, env(safe-area-inset-bottom));
       padding-left: 8px;
       padding-right: 8px;
     }
 
-    /* 2-Row Top Toolbar Container */
+    /* Tight, Touch-Friendly 2-Row Top Toolbar */
     #top-bar {
       width: 100%;
       max-width: 360px;
@@ -40,10 +40,11 @@
       flex-direction: column;
       gap: 5px;
       z-index: 100;
+      margin-top: 2px;
       margin-bottom: 4px;
     }
 
-    /* Row 1: Move + Draw with expanding sub-pill */
+    /* Row 1: Move + Draw */
     .toolbar-row-primary {
       display: flex;
       align-items: center;
@@ -56,7 +57,7 @@
       width: 100%;
       gap: 4px;
       background: #1e293b;
-      padding: 3px;
+      padding: 4px;
       border-radius: 8px;
       border: 1px solid #334155;
     }
@@ -66,15 +67,15 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 6px 10px;
-      font-size: 11.5px;
+      padding: 9px 12px;
+      font-size: 13px;
       font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 4px;
       white-space: nowrap;
     }
 
@@ -85,7 +86,7 @@
 
     .draw-sub-pill {
       display: flex;
-      gap: 2px;
+      gap: 3px;
       padding-left: 4px;
       border-left: 1px solid #475569;
     }
@@ -94,10 +95,10 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 5px 7px;
-      font-size: 10px;
+      padding: 8px 10px;
+      font-size: 11.5px;
       font-weight: 700;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
       white-space: nowrap;
     }
@@ -118,20 +119,21 @@
     .action-left {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
 
     .icon-btn {
       border: 1px solid #334155;
       background: #1e293b;
       color: #f1f5f9;
-      width: 34px;
-      height: 28px;
+      width: 44px;
+      height: 35px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
-      font-size: 13px;
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: 800;
       cursor: pointer;
     }
 
@@ -144,10 +146,10 @@
       background: #1e293b;
       color: #f1f5f9;
       font-weight: 700;
-      font-size: 11px;
-      padding: 5px 10px;
-      height: 28px;
-      border-radius: 6px;
+      font-size: 12.5px;
+      padding: 0 14px;
+      height: 35px;
+      border-radius: 7px;
       cursor: pointer;
       white-space: nowrap;
       display: flex;
@@ -165,16 +167,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 58px;
-      height: 28px;
+      width: 72px;
+      height: 35px;
     }
 
     .reset-ring-svg {
       position: absolute;
       top: -2px;
       left: -2px;
-      width: 62px;
-      height: 32px;
+      width: 76px;
+      height: 39px;
       pointer-events: none;
       z-index: 2;
     }
@@ -182,17 +184,17 @@
     .reset-ring-path {
       fill: none;
       stroke: #f87171;
-      stroke-width: 2;
+      stroke-width: 2.2;
       stroke-linecap: round;
-      stroke-dasharray: 164;
-      stroke-dashoffset: 164;
+      stroke-dasharray: 204;
+      stroke-dashoffset: 204;
       filter: drop-shadow(0 0 3px rgba(248, 113, 113, 0.7));
       transition: stroke-dashoffset 0s linear;
     }
 
     .reset-btn-wrapper.charging .reset-ring-path {
       stroke-dashoffset: 0;
-      transition: stroke-dashoffset 0.7s linear;
+      transition: stroke-dashoffset 1.4s linear;
     }
 
     .reset-btn {
@@ -202,8 +204,8 @@
       background: rgba(239, 68, 68, 0.15);
       color: #fca5a5;
       font-weight: 700;
-      font-size: 11px;
-      border-radius: 6px;
+      font-size: 12.5px;
+      border-radius: 7px;
       cursor: pointer;
       white-space: nowrap;
       display: flex;
@@ -221,13 +223,13 @@
     #board-container {
       position: relative;
       width: min(92vw, 360px);
-      height: min(184vw, 680px, 75vh);
+      height: min(184vw, 680px, calc(100vh - 104px));
       background-color: #d4a373;
       border: 3.5px solid #ffffff;
       border-radius: 6px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
       overflow: hidden;
-      margin: auto 0;
+      margin: 0;
     }
 
     .court-line {
@@ -447,7 +449,7 @@
 </head>
 <body>
 
-  <!-- 2-Row Top Toolbar -->
+  <!-- Touch-Friendly 2-Row Top Toolbar -->
   <div id="top-bar">
     <!-- Row 1: Move & Draw (with expandable line pill) -->
     <div class="toolbar-row-primary">
@@ -462,7 +464,7 @@
       </div>
     </div>
 
-    <!-- Row 2: Undo/Erase Left, Reset with Long-Press Progress Ring Right -->
+    <!-- Row 2: Undo/Erase Left, Reset Right -->
     <div class="toolbar-row-secondary">
       <div class="action-left">
         <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
@@ -470,15 +472,15 @@
       </div>
 
       <div id="reset-wrapper" class="reset-btn-wrapper">
-        <svg class="reset-ring-svg" viewBox="0 0 62 32">
-          <rect class="reset-ring-path" x="2" y="2" width="58" height="28" rx="6" ry="6" />
+        <svg class="reset-ring-svg" viewBox="0 0 76 39">
+          <rect class="reset-ring-path" x="2" y="2" width="72" height="35" rx="7" ry="7" />
         </svg>
-        <button id="reset-btn" class="reset-btn" title="轻触：还原当前战术站位 | 长按：重置整场">重置</button>
+        <button id="reset-btn" class="reset-btn" title="轻触：还原当前战术站位并清屏 | 长按：重置整场">重置</button>
       </div>
     </div>
   </div>
 
-  <!-- Court Board -->
+  <!-- Court Board (Docked closer to top bar) -->
   <div id="board-container">
     <div id="net" class="court-line"></div>
     <div class="attack-line-top court-line"></div>
@@ -711,22 +713,11 @@
       });
     }
 
-    function snapBallToFormation() {
+    // Static dedicated position for volleyball (bottom-right server spot)
+    function setBallStaticPosition() {
       const rect = container.getBoundingClientRect();
-      if (teamStances.away === 'defense') {
-        const s1 = playersData.find(p => p.id === 'A1');
-        const coords = getPlayerCoords(s1);
-        ball.style.left = `${coords.x * rect.width}px`;
-        ball.style.top = `${Math.max(18, coords.y * rect.height - 30)}px`;
-      } else if (teamStances.home === 'defense') {
-        const h1 = playersData.find(p => p.id === 'H1');
-        const coords = getPlayerCoords(h1);
-        ball.style.left = `${coords.x * rect.width}px`;
-        ball.style.top = `${Math.min(rect.height - 18, coords.y * rect.height + 30)}px`;
-      } else {
-        ball.style.left = `${rect.width * 0.50}px`;
-        ball.style.top = `${rect.height * 0.50}px`;
-      }
+      ball.style.left = `${rect.width * 0.78}px`;
+      ball.style.top = `${rect.height * 0.93}px`;
     }
 
     function updateTeamPositions(team) {
@@ -770,16 +761,16 @@
       updateTeamPositions(team);
     }
 
-    // Standard Reset (Tap): Snaps current formation, preserves ink, stances, & rotations
+    // Tap Reset: Snaps current formation, ball to static spot, clears drawings, preserves active stances & rotations
     function resetToCurrentFormation() {
       updateTeamPositions('away');
       updateTeamPositions('home');
-      snapBallToFormation();
+      setBallStaticPosition();
+      clearCanvas();
     }
 
     // Full Match Reset (Long-Press): Reboots game from start
     function fullMatchReset() {
-      const rect = container.getBoundingClientRect();
       teamStances = { away: 'defense', home: 'receive' };
       teamBlockSide = { away: 'mid', home: 'mid' };
       teamRotation = { away: 0, home: 0 };
@@ -813,12 +804,10 @@
       ];
       renderPlayers();
       clearCanvas();
-
-      ball.style.left = `${rect.width * 0.80}px`;
-      ball.style.top = `${rect.height * 0.10}px`;
+      setBallStaticPosition();
     }
 
-    // Reset interaction with Ring Animation & Vibration
+    // Reset interaction: extended long-press duration (1.4s)
     let resetTimer = null;
     let didLongPress = false;
 
@@ -827,7 +816,7 @@
       resetWrapper.classList.remove('charging');
     }
 
-    resetBtn.addEventListener('pointerdown', (e) => {
+    resetBtn.addEventListener('pointerdown', () => {
       didLongPress = false;
       resetWrapper.classList.add('charging');
       
@@ -836,7 +825,7 @@
         resetWrapper.classList.remove('charging');
         fullMatchReset();
         if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
-      }, 700);
+      }, 1400);
     });
 
     resetBtn.addEventListener('pointerup', () => {
@@ -994,6 +983,7 @@
 
     window.addEventListener('resize', () => {
       initCanvas();
+      setBallStaticPosition();
     });
   </script>
 </body>
