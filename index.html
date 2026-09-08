@@ -370,51 +370,57 @@
       return '#ef4444';
     }
 
+    // Defensive formations keyed strictly by slotIndex:
+    // Slot 0: Front-Left (客4/主4)
+    // Slot 1: Front-Mid (客3/主3)
+    // Slot 2: Front-Right (客2/主2)
+    // Slot 3: Back-Right (客1/主1)
+    // Slot 4: Back-Left (客5/主5)
     const defenseFormations = {
       away: {
         left: [
-          { x: 0.26, y: 0.44 },
-          { x: 0.38, y: 0.44 },
-          { x: 0.51, y: 0.44 },
-          { x: 0.83, y: 0.32 },
-          { x: 0.16, y: 0.40 }
+          { x: 0.20, y: 0.44 }, // Slot 0: Front Left Block
+          { x: 0.33, y: 0.44 }, // Slot 1: Front Mid Block
+          { x: 0.46, y: 0.44 }, // Slot 2: Front Right Block
+          { x: 0.82, y: 0.16 }, // Slot 3: Back Right Dig
+          { x: 0.18, y: 0.24 }  // Slot 4: Back Left Dig
         ],
         mid: [
-          { x: 0.35, y: 0.44 },
-          { x: 0.50, y: 0.44 },
-          { x: 0.65, y: 0.44 },
-          { x: 0.82, y: 0.32 },
-          { x: 0.20, y: 0.32 }
+          { x: 0.35, y: 0.44 }, // Slot 0
+          { x: 0.50, y: 0.44 }, // Slot 1
+          { x: 0.65, y: 0.44 }, // Slot 2
+          { x: 0.80, y: 0.18 }, // Slot 3
+          { x: 0.20, y: 0.18 }  // Slot 4
         ],
         right: [
-          { x: 0.56, y: 0.44 },
-          { x: 0.66, y: 0.44 },
-          { x: 0.77, y: 0.44 },
-          { x: 0.83, y: 0.33 },
-          { x: 0.28, y: 0.45 }
+          { x: 0.54, y: 0.44 }, // Slot 0: Front Left Block
+          { x: 0.67, y: 0.44 }, // Slot 1: Front Mid Block
+          { x: 0.80, y: 0.44 }, // Slot 2: Front Right Block
+          { x: 0.82, y: 0.24 }, // Slot 3: Back Right Dig
+          { x: 0.18, y: 0.16 }  // Slot 4: Back Left Dig
         ]
       },
       home: {
         left: [
-          { x: 0.26, y: 0.56 },
-          { x: 0.38, y: 0.56 },
-          { x: 0.51, y: 0.56 },
-          { x: 0.83, y: 0.68 },
-          { x: 0.16, y: 0.60 }
+          { x: 0.20, y: 0.56 }, // Slot 0: Front Left Block
+          { x: 0.33, y: 0.56 }, // Slot 1: Front Mid Block
+          { x: 0.46, y: 0.56 }, // Slot 2: Front Right Block
+          { x: 0.82, y: 0.84 }, // Slot 3: Back Right Dig
+          { x: 0.18, y: 0.76 }  // Slot 4: Back Left Dig
         ],
         mid: [
-          { x: 0.35, y: 0.56 },
-          { x: 0.50, y: 0.56 },
-          { x: 0.65, y: 0.56 },
-          { x: 0.82, y: 0.68 },
-          { x: 0.20, y: 0.68 }
+          { x: 0.35, y: 0.56 }, // Slot 0
+          { x: 0.50, y: 0.56 }, // Slot 1
+          { x: 0.65, y: 0.56 }, // Slot 2
+          { x: 0.80, y: 0.82 }, // Slot 3
+          { x: 0.20, y: 0.82 }  // Slot 4
         ],
         right: [
-          { x: 0.56, y: 0.56 },
-          { x: 0.66, y: 0.56 },
-          { x: 0.77, y: 0.56 },
-          { x: 0.83, y: 0.67 },
-          { x: 0.28, y: 0.55 }
+          { x: 0.54, y: 0.56 }, // Slot 0: Front Left Block
+          { x: 0.67, y: 0.56 }, // Slot 1: Front Mid Block
+          { x: 0.80, y: 0.56 }, // Slot 2: Front Right Block
+          { x: 0.82, y: 0.76 }, // Slot 3: Back Right Dig
+          { x: 0.18, y: 0.84 }  // Slot 4: Back Left Dig
         ]
       }
     };
