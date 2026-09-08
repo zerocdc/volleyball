@@ -26,48 +26,160 @@
       height: 100vh;
       overflow: hidden;
       touch-action: none;
-      padding-top: max(8px, env(safe-area-inset-top));
-      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      padding-top: max(6px, env(safe-area-inset-top));
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
       padding-left: 8px;
       padding-right: 8px;
     }
 
-    #toolbar-container {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    /* Clean Single-Row Top Toolbar */
+    #top-bar {
       width: 100%;
-      max-width: 400px;
+      max-width: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
       z-index: 100;
     }
 
-    .toolbar-row {
+    .tool-group {
       display: flex;
-      gap: 5px;
-      justify-content: space-between;
       align-items: center;
+      gap: 4px;
+      background: #1e293b;
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid #334155;
     }
 
-    button {
-      flex: 1;
-      padding: 8px 3px;
-      font-size: 11.5px;
+    .tool-group button {
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 6px 10px;
+      font-size: 11px;
       font-weight: 700;
       border-radius: 6px;
-      border: 1px solid #334155;
-      background: #1e293b;
-      color: #f1f5f9;
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 3px;
       white-space: nowrap;
     }
 
-    button.active {
+    .tool-group button.active {
       background: #2563eb;
-      border-color: #60a5fa;
       color: #ffffff;
+    }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .icon-btn {
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f1f5f9;
+      width: 32px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .icon-btn:active {
+      background: #334155;
+    }
+
+    .reset-btn {
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .reset-btn:active {
+      background: rgba(239, 68, 68, 0.3);
+      color: #ffffff;
+    }
+
+    /* Outside Court Control Rails */
+    .court-rail {
+      width: min(92vw, 360px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 2px;
+      z-index: 50;
+    }
+
+    .stance-strip {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 2px;
+      border-radius: 6px;
+    }
+
+    .stance-strip button {
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 4px 7px;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .stance-strip button.active {
+      color: #ffffff;
+    }
+
+    #away-rail .stance-strip button.active {
+      background: #dc2626;
+    }
+
+    #home-rail .stance-strip button.active {
+      background: #2563eb;
+    }
+
+    .blk-subgroup {
+      display: flex;
+      gap: 2px;
+      padding-left: 2px;
+      border-left: 1px solid #475569;
+    }
+
+    .rotate-badge {
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f1f5f9;
+      padding: 4px 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .rotate-badge:active {
+      background: #334155;
     }
 
     /* Court Board */
@@ -76,11 +188,11 @@
       width: min(92vw, 360px);
       height: min(184vw, 680px, 72vh);
       background-color: #d4a373;
-      border: 4px solid #ffffff;
+      border: 3.5px solid #ffffff;
       border-radius: 6px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
       overflow: hidden;
-      margin: auto 0;
+      margin: 0;
     }
 
     .court-line {
@@ -125,57 +237,6 @@
       height: 2px;
     }
 
-    /* Corner Stance & Block Toggles */
-    .corner-control {
-      position: absolute;
-      left: 4px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 4px;
-      z-index: 20;
-    }
-
-    #corner-away {
-      top: 4px;
-    }
-
-    #corner-home {
-      bottom: 4px;
-    }
-
-    .side-toggle, .block-toggle {
-      display: flex;
-      flex-direction: row;
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid #475569;
-      border-radius: 6px;
-      padding: 2px;
-      gap: 2px;
-      backdrop-filter: blur(4px);
-    }
-
-    .side-toggle button, .block-toggle button {
-      padding: 4px 6px;
-      font-size: 10px;
-      border: none;
-      background: transparent;
-      color: #94a3b8;
-      border-radius: 4px;
-    }
-
-    .side-toggle button.active, .block-toggle button.active {
-      color: #ffffff;
-    }
-
-    #toggle-away button.active, #block-away button.active {
-      background: #dc2626;
-    }
-
-    #toggle-home button.active, #block-home button.active {
-      background: #2563eb;
-    }
-
     #draw-layer {
       position: absolute;
       top: 0;
@@ -188,19 +249,19 @@
     /* Players */
     .player {
       position: absolute;
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13.5px;
       color: #ffffff;
       cursor: grab;
       touch-action: none;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
-      border: 2.5px solid #ffffff;
+      border: 2px solid #ffffff;
       z-index: 10;
       transform: translate(-50%, -50%);
       letter-spacing: -0.5px;
@@ -240,8 +301,8 @@
     /* Volleyball */
     #volleyball {
       position: absolute;
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: conic-gradient(
         #ffffff 0deg 60deg, 
@@ -251,7 +312,7 @@
         #facc15 240deg 300deg, 
         #2563eb 300deg 360deg
       );
-      border: 2.5px solid #0f172a;
+      border: 2px solid #0f172a;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.65);
       z-index: 15;
       transform: translate(-50%, -50%);
@@ -281,59 +342,59 @@
 </head>
 <body>
 
-  <div id="toolbar-container">
-    <div class="toolbar-row">
+  <!-- Clean Single-Row Top Toolbar -->
+  <div id="top-bar">
+    <div class="tool-group">
       <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
-      <button id="mode-draw-free" onclick="setInteractionMode('draw', 'free')">✏️ 自由画</button>
-      <button id="mode-draw-solid" onclick="setInteractionMode('draw', 'solid')">➔ 实线跑动</button>
-      <button id="mode-draw-dash" onclick="setInteractionMode('draw', 'dash')">⇢ 虚线传球</button>
+      <button id="draw-cycler" onclick="cycleDrawTool()">✏️ 自由画</button>
     </div>
 
-    <div class="toolbar-row">
-      <button onclick="rotateTeam('home')">🔄 我方轮转</button>
-      <button onclick="rotateTeam('away')">🔄 对方轮转</button>
-      <button onclick="undoLine()">↩️ 撤销</button>
-      <button onclick="clearCanvas()">🧹 清屏</button>
-      <button onclick="resetPositions()">重置</button>
+    <div class="action-group">
+      <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
+      <button class="icon-btn" onclick="clearCanvas()" title="清屏">🗑️</button>
+      <button class="reset-btn" onclick="resetPositions()">重置</button>
     </div>
   </div>
 
+  <!-- Away Control Rail (Outside Court Top) -->
+  <div id="away-rail" class="court-rail">
+    <div class="stance-strip">
+      <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">防</button>
+      <div id="away-blk-wrap" class="blk-subgroup">
+        <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
+        <button id="away-blk-mid" class="active" onclick="setBlockSide('away', 'mid')">中</button>
+        <button id="away-blk-right" onclick="setBlockSide('away', 'right')">右</button>
+      </div>
+      <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
+      <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
+    </div>
+    <button class="rotate-badge" onclick="rotateTeam('away')">🔄 轮转</button>
+  </div>
+
+  <!-- 100% Uncluttered Playing Surface -->
   <div id="board-container">
     <div id="net" class="court-line"></div>
     <div class="attack-line-top court-line"></div>
     <div class="attack-line-bottom court-line"></div>
 
-    <!-- Away Controls (Top Left Corner) -->
-    <div id="corner-away" class="corner-control">
-      <div id="toggle-away" class="side-toggle">
-        <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">防</button>
-        <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
-        <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
-      </div>
-      <div id="block-away" class="block-toggle">
-        <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
-        <button id="away-blk-mid" class="active" onclick="setBlockSide('away', 'mid')">中</button>
-        <button id="away-blk-right" onclick="setBlockSide('away', 'right')">右</button>
-      </div>
-    </div>
+    <canvas id="draw-layer"></canvas>
+    <div id="volleyball"></div>
+    <div id="players-layer"></div>
+  </div>
 
-    <!-- Home Controls (Bottom Left Corner) -->
-    <div id="corner-home" class="corner-control">
-      <div id="toggle-home" class="side-toggle">
-        <button id="home-btn-defense" onclick="setTeamStance('home', 'defense')">防</button>
-        <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
-        <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
-      </div>
-      <div id="block-home" class="block-toggle" style="display: none;">
+  <!-- Home Control Rail (Outside Court Bottom) -->
+  <div id="home-rail" class="court-rail">
+    <div class="stance-strip">
+      <button id="home-btn-defense" onclick="setTeamStance('home', 'defense')">防</button>
+      <div id="home-blk-wrap" class="blk-subgroup" style="display: none;">
         <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
         <button id="home-blk-mid" class="active" onclick="setBlockSide('home', 'mid')">中</button>
         <button id="home-blk-right" onclick="setBlockSide('home', 'right')">右</button>
       </div>
+      <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
+      <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
     </div>
-
-    <canvas id="draw-layer"></canvas>
-    <div id="volleyball"></div>
-    <div id="players-layer"></div>
+    <button class="rotate-badge" onclick="rotateTeam('home')">🔄 轮转</button>
   </div>
 
   <script>
@@ -345,11 +406,18 @@
 
     let currentMode = 'move';
     let lineStyle = 'free';
+    const drawModes = [
+      { id: 'free', label: '✏️ 自由画' },
+      { id: 'solid', label: '➔ 实线' },
+      { id: 'dash', label: '⇢ 虚线' }
+    ];
+    let drawModeIdx = 0;
+
     let isDrawing = false;
     let strokes = [];
     let currentStroke = [];
 
-    // Option A Default State: Away = Defense (ready to serve), Home = Receive (ready to receive)
+    // Realistic match start: Away = Defense/Serve, Home = Receive
     let teamStances = {
       away: 'defense',
       home: 'receive'
@@ -477,15 +545,21 @@
       redrawAllStrokes();
     }
 
-    function setInteractionMode(mode, style) {
+    function setInteractionMode(mode) {
       currentMode = mode;
-      if (style) lineStyle = style;
-
       document.getElementById('mode-move').classList.toggle('active', mode === 'move');
-      document.getElementById('mode-draw-free').classList.toggle('active', mode === 'draw' && lineStyle === 'free');
-      document.getElementById('mode-draw-solid').classList.toggle('active', mode === 'draw' && lineStyle === 'solid');
-      document.getElementById('mode-draw-dash').classList.toggle('active', mode === 'draw' && lineStyle === 'dash');
+      document.getElementById('draw-cycler').classList.toggle('active', mode === 'draw');
       canvas.style.pointerEvents = (mode === 'draw') ? 'auto' : 'none';
+    }
+
+    function cycleDrawTool() {
+      if (currentMode !== 'draw') {
+        setInteractionMode('draw');
+        return;
+      }
+      drawModeIdx = (drawModeIdx + 1) % drawModes.length;
+      lineStyle = drawModes[drawModeIdx].id;
+      document.getElementById('draw-cycler').innerText = drawModes[drawModeIdx].label;
     }
 
     function getPlayerCoords(p) {
@@ -516,7 +590,7 @@
         div.style.left = `${coords.x * rect.width}px`;
         div.style.top = `${coords.y * rect.height}px`;
 
-        makeDraggable(div, 23);
+        makeDraggable(div, 22);
         playersLayer.appendChild(div);
       });
     }
@@ -538,8 +612,8 @@
       document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
       document.getElementById(`${team}-btn-receive`).classList.toggle('active', stance === 'receive');
 
-      const blkToggle = document.getElementById(`block-${team}`);
-      blkToggle.style.display = (stance === 'defense') ? 'flex' : 'none';
+      const blkWrap = document.getElementById(`${team}-blk-wrap`);
+      blkWrap.style.display = (stance === 'defense') ? 'flex' : 'none';
 
       updateTeamPositions(team);
     }
@@ -568,20 +642,20 @@
       teamBlockSide = { away: 'mid', home: 'mid' };
       teamRotation = { away: 0, home: 0 };
 
-      // Away UI: Defense Active, Block Visible
+      // Away Defense UI
       document.getElementById('away-btn-defense').classList.add('active');
       document.getElementById('away-btn-offense').classList.remove('active');
       document.getElementById('away-btn-receive').classList.remove('active');
-      document.getElementById('block-away').style.display = 'flex';
+      document.getElementById('away-blk-wrap').style.display = 'flex';
       ['left', 'mid', 'right'].forEach(s => {
         document.getElementById(`away-blk-${s}`).classList.toggle('active', s === 'mid');
       });
 
-      // Home UI: Receive Active, Block Hidden
+      // Home Receive UI
       document.getElementById('home-btn-defense').classList.remove('active');
       document.getElementById('home-btn-offense').classList.remove('active');
       document.getElementById('home-btn-receive').classList.add('active');
-      document.getElementById('block-home').style.display = 'none';
+      document.getElementById('home-blk-wrap').style.display = 'none';
 
       playersData = [
         { id: 'A4', label: '客4', pNum: '4', team: 'away', slotIndex: 0, isSetter: false },
@@ -597,12 +671,12 @@
       ];
       renderPlayers();
 
-      // Place volleyball right at the Away server's hand (客1 at back-right)
-      ball.style.left = `${rect.width * 0.82}px`;
+      // Ball at server's hand (Away #1)
+      ball.style.left = `${rect.width * 0.80}px`;
       ball.style.top = `${rect.height * 0.10}px`;
     }
 
-    function makeDraggable(el, radius = 23) {
+    function makeDraggable(el, radius = 22) {
       let activeTouchId = null;
 
       el.addEventListener('pointerdown', (e) => {
@@ -740,7 +814,7 @@
     window.addEventListener('load', () => {
       initCanvas();
       resetPositions();
-      makeDraggable(ball, 18);
+      makeDraggable(ball, 17);
       setInteractionMode('move');
     });
 
