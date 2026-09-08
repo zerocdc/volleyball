@@ -214,8 +214,19 @@
       transition: none;
     }
 
+    /* Base team shades */
     .away { background: #dc2626; }
     .home { background: #2563eb; }
+
+    /* Lighter setter shades for players labeled 3 and 5 */
+    .away.setter { 
+      background: #f87171; 
+      color: #ffffff;
+    }
+    .home.setter { 
+      background: #60a5fa; 
+      color: #ffffff;
+    }
 
     .player:active {
       transform: translate(-50%, -50%) scale(1.15);
@@ -331,50 +342,51 @@
     const formations = {
       away: {
         defense: [
-          { x: 0.22, y: 0.46 },
-          { x: 0.50, y: 0.46 },
-          { x: 0.78, y: 0.46 },
-          { x: 0.72, y: 0.16 },
-          { x: 0.28, y: 0.16 }
+          { x: 0.22, y: 0.46 }, // Slot 0
+          { x: 0.50, y: 0.46 }, // Slot 1
+          { x: 0.78, y: 0.46 }, // Slot 2
+          { x: 0.72, y: 0.16 }, // Slot 3
+          { x: 0.28, y: 0.16 }  // Slot 4
         ],
         offense: [
-          { x: 0.16, y: 0.26 },
-          { x: 0.58, y: 0.44 },
-          { x: 0.84, y: 0.26 },
-          { x: 0.65, y: 0.12 },
-          { x: 0.35, y: 0.12 }
+          { x: 0.16, y: 0.26 }, // Slot 0
+          { x: 0.58, y: 0.44 }, // Slot 1
+          { x: 0.84, y: 0.26 }, // Slot 2
+          { x: 0.65, y: 0.12 }, // Slot 3
+          { x: 0.38, y: 0.26 }  // Slot 4
         ]
       },
       home: {
         defense: [
-          { x: 0.22, y: 0.54 },
-          { x: 0.50, y: 0.54 },
-          { x: 0.78, y: 0.54 },
-          { x: 0.72, y: 0.84 },
-          { x: 0.28, y: 0.84 }
+          { x: 0.22, y: 0.54 }, // Slot 0
+          { x: 0.50, y: 0.54 }, // Slot 1
+          { x: 0.78, y: 0.54 }, // Slot 2
+          { x: 0.72, y: 0.84 }, // Slot 3
+          { x: 0.28, y: 0.84 }  // Slot 4
         ],
         offense: [
-          { x: 0.16, y: 0.74 },
-          { x: 0.58, y: 0.56 },
-          { x: 0.84, y: 0.74 },
-          { x: 0.65, y: 0.88 },
-          { x: 0.35, y: 0.88 }
+          { x: 0.16, y: 0.74 }, // Slot 0
+          { x: 0.58, y: 0.56 }, // Slot 1
+          { x: 0.84, y: 0.74 }, // Slot 2
+          { x: 0.65, y: 0.88 }, // Slot 3
+          { x: 0.38, y: 0.74 }  // Slot 4
         ]
       }
     };
 
+    // Away and Home players labeled 3 and 5 flagged as isSetter
     let playersData = [
-      { id: 'A4', label: '客4', team: 'away', slotIndex: 0 },
-      { id: 'A3', label: '客3', team: 'away', slotIndex: 1 },
-      { id: 'A2', label: '客2', team: 'away', slotIndex: 2 },
-      { id: 'A5', label: '客5', team: 'away', slotIndex: 4 },
-      { id: 'A1', label: '客1', team: 'away', slotIndex: 3 },
+      { id: 'A4', label: '客4', team: 'away', slotIndex: 0, isSetter: false },
+      { id: 'A3', label: '客3', team: 'away', slotIndex: 1, isSetter: true },
+      { id: 'A2', label: '客2', team: 'away', slotIndex: 2, isSetter: false },
+      { id: 'A5', label: '客5', team: 'away', slotIndex: 4, isSetter: true },
+      { id: 'A1', label: '客1', team: 'away', slotIndex: 3, isSetter: false },
 
-      { id: 'H4', label: '主4', team: 'home', slotIndex: 0 },
-      { id: 'H3', label: '主3', team: 'home', slotIndex: 1 },
-      { id: 'H2', label: '主2', team: 'home', slotIndex: 2 },
-      { id: 'H5', label: '主5', team: 'home', slotIndex: 4 },
-      { id: 'H1', label: '主1', team: 'home', slotIndex: 3 }
+      { id: 'H4', label: '主4', team: 'home', slotIndex: 0, isSetter: false },
+      { id: 'H3', label: '主3', team: 'home', slotIndex: 1, isSetter: true },
+      { id: 'H2', label: '主2', team: 'home', slotIndex: 2, isSetter: false },
+      { id: 'H5', label: '主5', team: 'home', slotIndex: 4, isSetter: true },
+      { id: 'H1', label: '主1', team: 'home', slotIndex: 3, isSetter: false }
     ];
 
     function initCanvas() {
@@ -400,7 +412,7 @@
 
       playersData.forEach(p => {
         const div = document.createElement('div');
-        div.className = `player ${p.team}`;
+        div.className = `player ${p.team}${p.isSetter ? ' setter' : ''}`;
         div.id = p.id;
         div.innerText = p.label;
 
@@ -451,16 +463,16 @@
       document.getElementById('home-btn-defense').classList.add('active');
 
       playersData = [
-        { id: 'A4', label: '客4', team: 'away', slotIndex: 0 },
-        { id: 'A3', label: '客3', team: 'away', slotIndex: 1 },
-        { id: 'A2', label: '客2', team: 'away', slotIndex: 2 },
-        { id: 'A5', label: '客5', team: 'away', slotIndex: 4 },
-        { id: 'A1', label: '客1', team: 'away', slotIndex: 3 },
-        { id: 'H4', label: '主4', team: 'home', slotIndex: 0 },
-        { id: 'H3', label: '主3', team: 'home', slotIndex: 1 },
-        { id: 'H2', label: '主2', team: 'home', slotIndex: 2 },
-        { id: 'H5', label: '主5', team: 'home', slotIndex: 4 },
-        { id: 'H1', label: '主1', team: 'home', slotIndex: 3 }
+        { id: 'A4', label: '客4', team: 'away', slotIndex: 0, isSetter: false },
+        { id: 'A3', label: '客3', team: 'away', slotIndex: 1, isSetter: true },
+        { id: 'A2', label: '客2', team: 'away', slotIndex: 2, isSetter: false },
+        { id: 'A5', label: '客5', team: 'away', slotIndex: 4, isSetter: true },
+        { id: 'A1', label: '客1', team: 'away', slotIndex: 3, isSetter: false },
+        { id: 'H4', label: '主4', team: 'home', slotIndex: 0, isSetter: false },
+        { id: 'H3', label: '主3', team: 'home', slotIndex: 1, isSetter: true },
+        { id: 'H2', label: '主2', team: 'home', slotIndex: 2, isSetter: false },
+        { id: 'H5', label: '主5', team: 'home', slotIndex: 4, isSetter: true },
+        { id: 'H1', label: '主1', team: 'home', slotIndex: 3, isSetter: false }
       ];
       renderPlayers();
 
