@@ -379,23 +379,24 @@
       }
     };
 
-    // Serve receive positions with improved spacing:
-    // Setters stay tight to net (y: 0.55), passers shift back (y: 0.69-0.72) to clear attack line (0.666)
+    // Serve receive positions:
+    // Front 3 passers shifted back +0.02 (wings at y:0.72, middle cup at y:0.74)
+    // Deep back passer shifted back +0.07 (y:0.87)
     const homeReceiveFormations = [
-      // Image 1 (Rot 1): Setter #3 at mid-net, cup passers clear of 3m line, #1 deep right
-      { '1': { x: 0.64, y: 0.80 }, '2': { x: 0.78, y: 0.70 }, '3': { x: 0.50, y: 0.55 }, '4': { x: 0.22, y: 0.70 }, '5': { x: 0.50, y: 0.72 } },
+      // Rotation 1
+      { '1': { x: 0.64, y: 0.87 }, '2': { x: 0.78, y: 0.72 }, '3': { x: 0.50, y: 0.55 }, '4': { x: 0.22, y: 0.72 }, '5': { x: 0.50, y: 0.74 } },
 
-      // Image 2 (Rot 2): Setter #3 tucked right net, cup passers, #2 deep right
-      { '1': { x: 0.50, y: 0.72 }, '2': { x: 0.68, y: 0.80 }, '3': { x: 0.82, y: 0.55 }, '4': { x: 0.76, y: 0.70 }, '5': { x: 0.22, y: 0.70 } },
+      // Rotation 2
+      { '1': { x: 0.50, y: 0.74 }, '2': { x: 0.68, y: 0.87 }, '3': { x: 0.82, y: 0.55 }, '4': { x: 0.76, y: 0.72 }, '5': { x: 0.22, y: 0.72 } },
 
-      // Image 3 (Rot 3): Setter #5 at mid-net, cup passers, #3 penetrating deep right
-      { '1': { x: 0.22, y: 0.70 }, '2': { x: 0.50, y: 0.72 }, '3': { x: 0.68, y: 0.80 }, '4': { x: 0.78, y: 0.70 }, '5': { x: 0.50, y: 0.55 } },
+      // Rotation 3
+      { '1': { x: 0.22, y: 0.72 }, '2': { x: 0.50, y: 0.74 }, '3': { x: 0.68, y: 0.87 }, '4': { x: 0.78, y: 0.72 }, '5': { x: 0.50, y: 0.55 } },
 
-      // Image 4 (Rot 4): Setter #5 tucked right net, cup passers, #4 deep right
-      { '1': { x: 0.76, y: 0.70 }, '2': { x: 0.22, y: 0.70 }, '3': { x: 0.50, y: 0.72 }, '4': { x: 0.68, y: 0.80 }, '5': { x: 0.82, y: 0.55 } },
+      // Rotation 4
+      { '1': { x: 0.76, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.50, y: 0.74 }, '4': { x: 0.68, y: 0.87 }, '5': { x: 0.82, y: 0.55 } },
 
-      // Image 5 (Rot 5): Setter #3 tucked left net, cup passers, #5 deep right
-      { '1': { x: 0.78, y: 0.70 }, '2': { x: 0.22, y: 0.70 }, '3': { x: 0.16, y: 0.55 }, '4': { x: 0.50, y: 0.72 }, '5': { x: 0.68, y: 0.80 } }
+      // Rotation 5
+      { '1': { x: 0.78, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.16, y: 0.55 }, '4': { x: 0.50, y: 0.74 }, '5': { x: 0.68, y: 0.87 } }
     ];
 
     // Away team mirrored vertically across net (y' = 1 - y)
