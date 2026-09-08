@@ -50,7 +50,7 @@
 
     button {
       flex: 1;
-      padding: 7px 2px;
+      padding: 8px 3px;
       font-size: 11.5px;
       font-weight: 700;
       border-radius: 6px;
@@ -68,27 +68,6 @@
       background: #2563eb;
       border-color: #60a5fa;
       color: #ffffff;
-    }
-
-    .color-picker {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-      padding: 0 2px;
-    }
-
-    .color-swatch {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      cursor: pointer;
-    }
-
-    .color-swatch.active {
-      border-color: #ffffff;
-      transform: scale(1.15);
-      box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
     }
 
     /* Court Board */
@@ -146,6 +125,50 @@
       height: 2px;
     }
 
+    /* On-Court Offense/Defense Side Toggles */
+    .side-toggle {
+      position: absolute;
+      left: 8px;
+      display: flex;
+      flex-direction: column;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+      z-index: 20;
+      backdrop-filter: blur(4px);
+    }
+
+    #toggle-away {
+      top: 14%;
+    }
+
+    #toggle-home {
+      bottom: 14%;
+    }
+
+    .side-toggle button {
+      padding: 5px 8px;
+      font-size: 11px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      border-radius: 5px;
+    }
+
+    .side-toggle button.active {
+      color: #ffffff;
+    }
+
+    #toggle-away button.active {
+      background: #dc2626; /* Red for away team */
+    }
+
+    #toggle-home button.active {
+      background: #2563eb; /* Blue for home team */
+    }
+
     #draw-layer {
       position: absolute;
       top: 0;
@@ -155,7 +178,7 @@
       z-index: 5;
     }
 
-    /* Enlarged Player Tokens (46px diameter + 54px hit area) */
+    /* Players */
     .player {
       position: absolute;
       width: 46px;
@@ -174,10 +197,9 @@
       z-index: 10;
       transform: translate(-50%, -50%);
       letter-spacing: -0.5px;
-      transition: top 0.25s ease, left 0.25s ease;
+      transition: top 0.35s cubic-bezier(0.25, 1, 0.5, 1), left 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    /* Invisible expanded hit-box for easier thumb grabbing */
     .player::after {
       content: '';
       position: absolute;
@@ -199,7 +221,7 @@
       transform: translate(-50%, -50%) scale(1.15);
     }
 
-    /* Enlarged Volleyball (36px diameter + expanded hit area) */
+    /* Volleyball */
     #volleyball {
       position: absolute;
       width: 36px;
@@ -219,6 +241,11 @@
       transform: translate(-50%, -50%);
       cursor: grab;
       touch-action: none;
+      transition: top 0.35s ease, left 0.35s ease;
+    }
+
+    #volleyball.dragging {
+      transition: none;
     }
 
     #volleyball::after {
@@ -244,11 +271,6 @@
       <button id="mode-draw-free" onclick="setInteractionMode('draw', 'free')">✏️ 自由画</button>
       <button id="mode-draw-solid" onclick="setInteractionMode('draw', 'solid')">➔ 实线跑动</button>
       <button id="mode-draw-dash" onclick="setInteractionMode('draw', 'dash')">⇢ 虚线传球</button>
-      <div class="color-picker">
-        <div class="color-swatch active" style="background:#fef08a;" onclick="setColor('#fef08a', this)"></div>
-        <div class="color-swatch" style="background:#ef4444;" onclick="setColor('#ef4444', this)"></div>
-        <div class="color-swatch" style="background:#ffffff;" onclick="setColor('#ffffff', this)"></div>
-      </div>
     </div>
 
     <div class="toolbar-row">
@@ -261,9 +283,23 @@
   </div>
 
   <div id="board-container">
+    <!-- Court Overlay Elements -->
     <div id="net" class="court-line"></div>
     <div class="attack-line-top court-line"></div>
     <div class="attack-line-bottom court-line"></div>
+
+    <!-- Away Team (Top) Mode Toggle -->
+    <div id="toggle-away" class="side-toggle">
+      <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">客 攻</button>
+      <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">客 防</button>
+    </div>
+
+    <!-- Home Team (Bottom) Mode Toggle -->
+    <div id="toggle-home" class="side-toggle">
+      <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">主 攻</button>
+      <button id="home-btn-defense" class="active" onclick="setTeamStance('home', 'defense')">主 防</button>
+    </div>
+
     <canvas id="draw-layer"></canvas>
     <div id="volleyball"></div>
     <div id="players-layer"></div>
@@ -278,26 +314,60 @@
 
     let currentMode = 'move';
     let lineStyle = 'free';
-    let strokeColor = '#fef08a';
     let isDrawing = false;
     let strokes = [];
     let currentStroke = [];
 
-    const slotCoords = {
-      away: [
-        { x: 0.22, y: 0.38 },
-        { x: 0.50, y: 0.38 },
-        { x: 0.78, y: 0.38 },
-        { x: 0.68, y: 0.14 },
-        { x: 0.32, y: 0.14 }
-      ],
-      home: [
-        { x: 0.22, y: 0.62 },
-        { x: 0.50, y: 0.62 },
-        { x: 0.78, y: 0.62 },
-        { x: 0.68, y: 0.86 },
-        { x: 0.32, y: 0.86 }
-      ]
+    // Current Tactical Stance ('defense' = blocking at net, 'offense' = approach off the line)
+    let teamStances = {
+      away: 'defense',
+      home: 'defense'
+    };
+
+    function getStrokeColor(style) {
+      if (style === 'dash') return '#ffffff'; // White for pass
+      return '#ef4444'; // Red for free draw & runs
+    }
+
+    // Formation slot coordinate mappings:
+    // Slot 0: Left Front, Slot 1: Mid Front, Slot 2: Right Front, Slot 3: Right Back, Slot 4: Left Back
+    const formations = {
+      away: {
+        // Defensive: Front 3 right up against the net tape for blocks, back 2 digging
+        defense: [
+          { x: 0.22, y: 0.46 }, // Front-Left (Tight to Net)
+          { x: 0.50, y: 0.46 }, // Front-Mid (Tight to Net)
+          { x: 0.78, y: 0.46 }, // Front-Right (Tight to Net)
+          { x: 0.72, y: 0.16 }, // Back-Right
+          { x: 0.28, y: 0.16 }  // Back-Left
+        ],
+        // Offensive: Hitters pull back off the net (beyond attack line) to approach, setter close
+        offense: [
+          { x: 0.16, y: 0.26 }, // Left Hitter pulled back to approach
+          { x: 0.58, y: 0.44 }, // Setter target at net
+          { x: 0.84, y: 0.26 }, // Right Hitter pulled back to approach
+          { x: 0.65, y: 0.12 }, // Back Row Pipe / Cover
+          { x: 0.35, y: 0.12 }  // Back Row Cover
+        ]
+      },
+      home: {
+        // Defensive: Front 3 tight to the net tape ready to block, back 2 digging
+        defense: [
+          { x: 0.22, y: 0.54 }, // Front-Left (Tight to Net)
+          { x: 0.50, y: 0.54 }, // Front-Mid (Tight to Net)
+          { x: 0.78, y: 0.54 }, // Front-Right (Tight to Net)
+          { x: 0.72, y: 0.84 }, // Back-Right
+          { x: 0.28, y: 0.84 }  // Back-Left
+        ],
+        // Offensive: Hitters pull back off the net (beyond attack line) to approach, setter close
+        offense: [
+          { x: 0.16, y: 0.74 }, // Left Hitter pulled back to approach
+          { x: 0.58, y: 0.56 }, // Setter target at net
+          { x: 0.84, y: 0.74 }, // Right Hitter pulled back to approach
+          { x: 0.65, y: 0.88 }, // Back Row Pipe / Cover
+          { x: 0.35, y: 0.88 }  // Back Row Cover
+        ]
+      }
     };
 
     let playersData = [
@@ -306,6 +376,7 @@
       { id: 'A2', label: '客2', team: 'away', slotIndex: 2 },
       { id: 'A5', label: '客5', team: 'away', slotIndex: 4 },
       { id: 'A1', label: '客1', team: 'away', slotIndex: 3 },
+
       { id: 'H4', label: '主4', team: 'home', slotIndex: 0 },
       { id: 'H3', label: '主3', team: 'home', slotIndex: 1 },
       { id: 'H2', label: '主2', team: 'home', slotIndex: 2 },
@@ -330,12 +401,6 @@
       canvas.style.pointerEvents = (mode === 'draw') ? 'auto' : 'none';
     }
 
-    function setColor(color, swatchEl) {
-      strokeColor = color;
-      document.querySelectorAll('.color-swatch').forEach(el => el.classList.remove('active'));
-      swatchEl.classList.add('active');
-    }
-
     function renderPlayers() {
       playersLayer.innerHTML = '';
       const rect = container.getBoundingClientRect();
@@ -346,21 +411,40 @@
         div.id = p.id;
         div.innerText = p.label;
 
-        const coords = slotCoords[p.team][p.slotIndex];
+        const coords = formations[p.team][teamStances[p.team]][p.slotIndex];
         div.style.left = `${coords.x * rect.width}px`;
         div.style.top = `${coords.y * rect.height}px`;
 
-        makeDraggable(div, 23); // 23px radius
+        makeDraggable(div, 23);
         playersLayer.appendChild(div);
+      });
+    }
+
+    function setTeamStance(team, stance) {
+      teamStances[team] = stance;
+      const rect = container.getBoundingClientRect();
+
+      // Update button highlights
+      document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
+      document.getElementById(`${team}-btn-defense`).classList.toggle('active', stance === 'defense');
+
+      // Slide players into offense or defense positions
+      playersData.filter(p => p.team === team).forEach(p => {
+        const el = document.getElementById(p.id);
+        const coords = formations[team][stance][p.slotIndex];
+        el.style.left = `${coords.x * rect.width}px`;
+        el.style.top = `${coords.y * rect.height}px`;
       });
     }
 
     function rotateTeam(team) {
       const rect = container.getBoundingClientRect();
+      const currentStance = teamStances[team];
+
       playersData.filter(p => p.team === team).forEach(p => {
         p.slotIndex = (p.slotIndex + 1) % 5;
         const el = document.getElementById(p.id);
-        const coords = slotCoords[team][p.slotIndex];
+        const coords = formations[team][currentStance][p.slotIndex];
         el.style.left = `${coords.x * rect.width}px`;
         el.style.top = `${coords.y * rect.height}px`;
       });
@@ -368,6 +452,13 @@
 
     function resetPositions() {
       const rect = container.getBoundingClientRect();
+      teamStances = { away: 'defense', home: 'defense' };
+
+      document.getElementById('away-btn-offense').classList.remove('active');
+      document.getElementById('away-btn-defense').classList.add('active');
+      document.getElementById('home-btn-offense').classList.remove('active');
+      document.getElementById('home-btn-defense').classList.add('active');
+
       playersData = [
         { id: 'A4', label: '客4', team: 'away', slotIndex: 0 },
         { id: 'A3', label: '客3', team: 'away', slotIndex: 1 },
@@ -381,6 +472,7 @@
         { id: 'H1', label: '主1', team: 'home', slotIndex: 3 }
       ];
       renderPlayers();
+
       ball.style.left = `${rect.width * 0.8}px`;
       ball.style.top = `${rect.height * 0.94}px`;
     }
@@ -434,7 +526,7 @@
       redrawAllStrokes();
       renderSingleStroke({
         points: currentStroke,
-        color: strokeColor,
+        color: getStrokeColor(lineStyle),
         style: lineStyle
       });
     }
@@ -445,7 +537,7 @@
       if (currentStroke.length > 1) {
         strokes.push({
           points: currentStroke,
-          color: strokeColor,
+          color: getStrokeColor(lineStyle),
           style: lineStyle
         });
       }
