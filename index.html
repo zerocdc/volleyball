@@ -125,7 +125,7 @@
       height: 2px;
     }
 
-    /* Corner Stance Toggles (Defense / Attack / Receive) */
+    /* Corner Stance Toggles */
     .side-toggle {
       position: absolute;
       left: 4px;
@@ -379,21 +379,26 @@
       }
     };
 
-    // Serve receive mapping based on your 5 images (keyed by player label)
+    // Serve receive positions with improved spacing:
+    // Setters stay tight to net (y: 0.55), passers shift back (y: 0.69-0.72) to clear attack line (0.666)
     const homeReceiveFormations = [
-      // Image 1 (Rot 1)
-      { '1': { x: 0.58, y: 0.78 }, '2': { x: 0.75, y: 0.65 }, '3': { x: 0.50, y: 0.57 }, '4': { x: 0.25, y: 0.65 }, '5': { x: 0.50, y: 0.66 } },
-      // Image 2 (Rot 2)
-      { '1': { x: 0.50, y: 0.66 }, '2': { x: 0.68, y: 0.75 }, '3': { x: 0.82, y: 0.58 }, '4': { x: 0.69, y: 0.66 }, '5': { x: 0.24, y: 0.66 } },
-      // Image 3 (Rot 3)
-      { '1': { x: 0.22, y: 0.66 }, '2': { x: 0.50, y: 0.66 }, '3': { x: 0.68, y: 0.75 }, '4': { x: 0.80, y: 0.67 }, '5': { x: 0.50, y: 0.57 } },
-      // Image 4 (Rot 4)
-      { '1': { x: 0.73, y: 0.66 }, '2': { x: 0.22, y: 0.64 }, '3': { x: 0.50, y: 0.66 }, '4': { x: 0.68, y: 0.75 }, '5': { x: 0.82, y: 0.58 } },
-      // Image 5 (Rot 5)
-      { '1': { x: 0.78, y: 0.65 }, '2': { x: 0.23, y: 0.64 }, '3': { x: 0.15, y: 0.57 }, '4': { x: 0.50, y: 0.65 }, '5': { x: 0.68, y: 0.75 } }
+      // Image 1 (Rot 1): Setter #3 at mid-net, cup passers clear of 3m line, #1 deep right
+      { '1': { x: 0.64, y: 0.80 }, '2': { x: 0.78, y: 0.70 }, '3': { x: 0.50, y: 0.55 }, '4': { x: 0.22, y: 0.70 }, '5': { x: 0.50, y: 0.72 } },
+
+      // Image 2 (Rot 2): Setter #3 tucked right net, cup passers, #2 deep right
+      { '1': { x: 0.50, y: 0.72 }, '2': { x: 0.68, y: 0.80 }, '3': { x: 0.82, y: 0.55 }, '4': { x: 0.76, y: 0.70 }, '5': { x: 0.22, y: 0.70 } },
+
+      // Image 3 (Rot 3): Setter #5 at mid-net, cup passers, #3 penetrating deep right
+      { '1': { x: 0.22, y: 0.70 }, '2': { x: 0.50, y: 0.72 }, '3': { x: 0.68, y: 0.80 }, '4': { x: 0.78, y: 0.70 }, '5': { x: 0.50, y: 0.55 } },
+
+      // Image 4 (Rot 4): Setter #5 tucked right net, cup passers, #4 deep right
+      { '1': { x: 0.76, y: 0.70 }, '2': { x: 0.22, y: 0.70 }, '3': { x: 0.50, y: 0.72 }, '4': { x: 0.68, y: 0.80 }, '5': { x: 0.82, y: 0.55 } },
+
+      // Image 5 (Rot 5): Setter #3 tucked left net, cup passers, #5 deep right
+      { '1': { x: 0.78, y: 0.70 }, '2': { x: 0.22, y: 0.70 }, '3': { x: 0.16, y: 0.55 }, '4': { x: 0.50, y: 0.72 }, '5': { x: 0.68, y: 0.80 } }
     ];
 
-    // Away team mirrored vertically across y = 0.50 (y' = 1 - y)
+    // Away team mirrored vertically across net (y' = 1 - y)
     const awayReceiveFormations = homeReceiveFormations.map(rot => {
       const mirrored = {};
       for (const [pNum, pos] of Object.entries(rot)) {
@@ -412,8 +417,8 @@
       { id: 'H4', label: '主4', pNum: '4', team: 'home', slotIndex: 0, isSetter: false },
       { id: 'H3', label: '主3', pNum: '3', team: 'home', slotIndex: 1, isSetter: true },
       { id: 'H2', label: '主2', pNum: '2', team: 'home', slotIndex: 2, isSetter: false },
-      { id: 'H5', label: '主5', team: 'home', pNum: '5', slotIndex: 4, isSetter: true },
-      { id: 'H1', label: '主1', team: 'home', pNum: '1', slotIndex: 3, isSetter: false }
+      { id: 'H5', label: '主5', pNum: '5', team: 'home', slotIndex: 4, isSetter: true },
+      { id: 'H1', label: '主1', pNum: '1', team: 'home', slotIndex: 3, isSetter: false }
     ];
 
     function initCanvas() {
