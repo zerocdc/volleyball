@@ -306,9 +306,9 @@
     <!-- Away Controls (Top Left Corner) -->
     <div id="corner-away" class="corner-control">
       <div id="toggle-away" class="side-toggle">
-        <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">客防</button>
-        <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">客攻</button>
-        <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">客接</button>
+        <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">防</button>
+        <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
+        <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
       </div>
       <div id="block-away" class="block-toggle">
         <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
@@ -320,9 +320,9 @@
     <!-- Home Controls (Bottom Left Corner) -->
     <div id="corner-home" class="corner-control">
       <div id="toggle-home" class="side-toggle">
-        <button id="home-btn-defense" class="active" onclick="setTeamStance('home', 'defense')">主防</button>
-        <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">主攻</button>
-        <button id="home-btn-receive" onclick="setTeamStance('home', 'receive')">主接</button>
+        <button id="home-btn-defense" class="active" onclick="setTeamStance('home', 'defense')">防</button>
+        <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
+        <button id="home-btn-receive" onclick="setTeamStance('home', 'receive')">接</button>
       </div>
       <div id="block-home" class="block-toggle">
         <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
@@ -370,42 +370,37 @@
       return '#ef4444';
     }
 
-    // Defensive formations for the 3 blocking schemes based on your screenshots
     const defenseFormations = {
       away: {
-        // Image 1: Left block
         left: [
-          { x: 0.20, y: 0.44 }, // Slot 0
-          { x: 0.35, y: 0.44 }, // Slot 1
-          { x: 0.50, y: 0.44 }, // Slot 2
-          { x: 0.68, y: 0.22 }, // Slot 3
-          { x: 0.18, y: 0.34 }  // Slot 4
+          { x: 0.26, y: 0.44 },
+          { x: 0.38, y: 0.44 },
+          { x: 0.51, y: 0.44 },
+          { x: 0.83, y: 0.32 },
+          { x: 0.16, y: 0.40 }
         ],
-        // Image 2: Mid block
         mid: [
-          { x: 0.35, y: 0.44 }, // Slot 0
-          { x: 0.50, y: 0.44 }, // Slot 1
-          { x: 0.65, y: 0.44 }, // Slot 2
-          { x: 0.82, y: 0.32 }, // Slot 3
-          { x: 0.20, y: 0.32 }  // Slot 4
+          { x: 0.35, y: 0.44 },
+          { x: 0.50, y: 0.44 },
+          { x: 0.65, y: 0.44 },
+          { x: 0.82, y: 0.32 },
+          { x: 0.20, y: 0.32 }
         ],
-        // Image 3: Right block
         right: [
-          { x: 0.57, y: 0.44 }, // Slot 0
-          { x: 0.69, y: 0.44 }, // Slot 1
-          { x: 0.82, y: 0.44 }, // Slot 2
-          { x: 0.84, y: 0.26 }, // Slot 3
-          { x: 0.18, y: 0.38 }  // Slot 4
+          { x: 0.56, y: 0.44 },
+          { x: 0.66, y: 0.44 },
+          { x: 0.77, y: 0.44 },
+          { x: 0.83, y: 0.33 },
+          { x: 0.28, y: 0.45 }
         ]
       },
-      // Home mirrored vertically across y = 0.50
       home: {
         left: [
-          { x: 0.20, y: 0.56 },
-          { x: 0.35, y: 0.56 },
-          { x: 0.50, y: 0.56 },
-          { x: 0.68, y: 0.78 },
-          { x: 0.18, y: 0.66 }
+          { x: 0.26, y: 0.56 },
+          { x: 0.38, y: 0.56 },
+          { x: 0.51, y: 0.56 },
+          { x: 0.83, y: 0.68 },
+          { x: 0.16, y: 0.60 }
         ],
         mid: [
           { x: 0.35, y: 0.56 },
@@ -415,11 +410,11 @@
           { x: 0.20, y: 0.68 }
         ],
         right: [
-          { x: 0.57, y: 0.56 },
-          { x: 0.69, y: 0.56 },
-          { x: 0.82, y: 0.56 },
-          { x: 0.84, y: 0.74 },
-          { x: 0.18, y: 0.62 }
+          { x: 0.56, y: 0.56 },
+          { x: 0.66, y: 0.56 },
+          { x: 0.77, y: 0.56 },
+          { x: 0.83, y: 0.67 },
+          { x: 0.28, y: 0.55 }
         ]
       }
     };
@@ -542,7 +537,6 @@
       document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
       document.getElementById(`${team}-btn-receive`).classList.toggle('active', stance === 'receive');
 
-      // Show or hide the block toggle buttons depending on whether Defense is selected
       const blkToggle = document.getElementById(`block-${team}`);
       blkToggle.style.display = (stance === 'defense') ? 'flex' : 'none';
 
