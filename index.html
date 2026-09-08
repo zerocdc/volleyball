@@ -125,10 +125,26 @@
       height: 2px;
     }
 
-    /* Corner Stance Toggles */
-    .side-toggle {
+    /* Corner Stance & Block Toggles */
+    .corner-control {
       position: absolute;
       left: 4px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+      z-index: 20;
+    }
+
+    #corner-away {
+      top: 4px;
+    }
+
+    #corner-home {
+      bottom: 4px;
+    }
+
+    .side-toggle, .block-toggle {
       display: flex;
       flex-direction: row;
       background: rgba(15, 23, 42, 0.88);
@@ -136,19 +152,10 @@
       border-radius: 6px;
       padding: 2px;
       gap: 2px;
-      z-index: 20;
       backdrop-filter: blur(4px);
     }
 
-    #toggle-away {
-      top: 4px;
-    }
-
-    #toggle-home {
-      bottom: 4px;
-    }
-
-    .side-toggle button {
+    .side-toggle button, .block-toggle button {
       padding: 4px 6px;
       font-size: 10px;
       border: none;
@@ -157,15 +164,15 @@
       border-radius: 4px;
     }
 
-    .side-toggle button.active {
+    .side-toggle button.active, .block-toggle button.active {
       color: #ffffff;
     }
 
-    #toggle-away button.active {
+    #toggle-away button.active, #block-away button.active {
       background: #dc2626;
     }
 
-    #toggle-home button.active {
+    #toggle-home button.active, #block-home button.active {
       background: #2563eb;
     }
 
@@ -296,18 +303,32 @@
     <div class="attack-line-top court-line"></div>
     <div class="attack-line-bottom court-line"></div>
 
-    <!-- Away Team Stance Toggle -->
-    <div id="toggle-away" class="side-toggle">
-      <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">客防</button>
-      <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">客攻</button>
-      <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">客接</button>
+    <!-- Away Controls (Top Left Corner) -->
+    <div id="corner-away" class="corner-control">
+      <div id="toggle-away" class="side-toggle">
+        <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">客防</button>
+        <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">客攻</button>
+        <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">客接</button>
+      </div>
+      <div id="block-away" class="block-toggle">
+        <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
+        <button id="away-blk-mid" class="active" onclick="setBlockSide('away', 'mid')">中</button>
+        <button id="away-blk-right" onclick="setBlockSide('away', 'right')">右</button>
+      </div>
     </div>
 
-    <!-- Home Team Stance Toggle -->
-    <div id="toggle-home" class="side-toggle">
-      <button id="home-btn-defense" class="active" onclick="setTeamStance('home', 'defense')">主防</button>
-      <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">主攻</button>
-      <button id="home-btn-receive" onclick="setTeamStance('home', 'receive')">主接</button>
+    <!-- Home Controls (Bottom Left Corner) -->
+    <div id="corner-home" class="corner-control">
+      <div id="toggle-home" class="side-toggle">
+        <button id="home-btn-defense" class="active" onclick="setTeamStance('home', 'defense')">主防</button>
+        <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">主攻</button>
+        <button id="home-btn-receive" onclick="setTeamStance('home', 'receive')">主接</button>
+      </div>
+      <div id="block-home" class="block-toggle">
+        <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
+        <button id="home-blk-mid" class="active" onclick="setBlockSide('home', 'mid')">中</button>
+        <button id="home-blk-right" onclick="setBlockSide('home', 'right')">右</button>
+      </div>
     </div>
 
     <canvas id="draw-layer"></canvas>
@@ -333,6 +354,11 @@
       home: 'defense'
     };
 
+    let teamBlockSide = {
+      away: 'mid',
+      home: 'mid'
+    };
+
     let teamRotation = {
       away: 0,
       home: 0
@@ -344,35 +370,75 @@
       return '#ef4444';
     }
 
+    // Defensive formations for the 3 blocking schemes based on your screenshots
+    const defenseFormations = {
+      away: {
+        // Image 1: Left block
+        left: [
+          { x: 0.20, y: 0.44 }, // Slot 0
+          { x: 0.35, y: 0.44 }, // Slot 1
+          { x: 0.50, y: 0.44 }, // Slot 2
+          { x: 0.68, y: 0.22 }, // Slot 3
+          { x: 0.18, y: 0.34 }  // Slot 4
+        ],
+        // Image 2: Mid block
+        mid: [
+          { x: 0.35, y: 0.44 }, // Slot 0
+          { x: 0.50, y: 0.44 }, // Slot 1
+          { x: 0.65, y: 0.44 }, // Slot 2
+          { x: 0.82, y: 0.32 }, // Slot 3
+          { x: 0.20, y: 0.32 }  // Slot 4
+        ],
+        // Image 3: Right block
+        right: [
+          { x: 0.57, y: 0.44 }, // Slot 0
+          { x: 0.69, y: 0.44 }, // Slot 1
+          { x: 0.82, y: 0.44 }, // Slot 2
+          { x: 0.84, y: 0.26 }, // Slot 3
+          { x: 0.18, y: 0.38 }  // Slot 4
+        ]
+      },
+      // Home mirrored vertically across y = 0.50
+      home: {
+        left: [
+          { x: 0.20, y: 0.56 },
+          { x: 0.35, y: 0.56 },
+          { x: 0.50, y: 0.56 },
+          { x: 0.68, y: 0.78 },
+          { x: 0.18, y: 0.66 }
+        ],
+        mid: [
+          { x: 0.35, y: 0.56 },
+          { x: 0.50, y: 0.56 },
+          { x: 0.65, y: 0.56 },
+          { x: 0.82, y: 0.68 },
+          { x: 0.20, y: 0.68 }
+        ],
+        right: [
+          { x: 0.57, y: 0.56 },
+          { x: 0.69, y: 0.56 },
+          { x: 0.82, y: 0.56 },
+          { x: 0.84, y: 0.74 },
+          { x: 0.18, y: 0.62 }
+        ]
+      }
+    };
+
     const staticFormations = {
       away: {
-        defense: [
-          { x: 0.22, y: 0.44 },
-          { x: 0.50, y: 0.44 },
-          { x: 0.78, y: 0.44 },
-          { x: 0.72, y: 0.16 },
-          { x: 0.28, y: 0.16 }
-        ],
         offense: [
-          { x: 0.16, y: 0.26 },
+          { x: 0.08, y: 0.26 },
           { x: 0.58, y: 0.42 },
-          { x: 0.84, y: 0.26 },
+          { x: 0.92, y: 0.26 },
           { x: 0.65, y: 0.12 },
           { x: 0.38, y: 0.26 }
         ]
       },
       home: {
-        defense: [
-          { x: 0.22, y: 0.56 },
-          { x: 0.50, y: 0.56 },
-          { x: 0.78, y: 0.56 },
-          { x: 0.72, y: 0.84 },
-          { x: 0.28, y: 0.84 }
-        ],
         offense: [
-          { x: 0.16, y: 0.74 },
+          { x: 0.08, y: 0.74 },
           { x: 0.58, y: 0.58 },
-          { x: 0.84, y: 0.74 },
+          { x: 0.92, y: 0.74 },
           { x: 0.65, y: 0.88 },
           { x: 0.38, y: 0.74 }
         ]
@@ -380,23 +446,13 @@
     };
 
     const homeReceiveFormations = [
-      // Rotation 1
       { '1': { x: 0.64, y: 0.87 }, '2': { x: 0.78, y: 0.72 }, '3': { x: 0.50, y: 0.55 }, '4': { x: 0.22, y: 0.72 }, '5': { x: 0.50, y: 0.74 } },
-
-      // Rotation 2
       { '1': { x: 0.50, y: 0.74 }, '2': { x: 0.68, y: 0.87 }, '3': { x: 0.82, y: 0.55 }, '4': { x: 0.76, y: 0.72 }, '5': { x: 0.22, y: 0.72 } },
-
-      // Rotation 3
       { '1': { x: 0.22, y: 0.72 }, '2': { x: 0.50, y: 0.74 }, '3': { x: 0.68, y: 0.87 }, '4': { x: 0.78, y: 0.72 }, '5': { x: 0.50, y: 0.55 } },
-
-      // Rotation 4
       { '1': { x: 0.76, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.50, y: 0.74 }, '4': { x: 0.68, y: 0.87 }, '5': { x: 0.82, y: 0.55 } },
-
-      // Rotation 5
       { '1': { x: 0.78, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.16, y: 0.55 }, '4': { x: 0.50, y: 0.74 }, '5': { x: 0.68, y: 0.87 } }
     ];
 
-    // Away team mirrored vertically across net and shifted up by 0.03
     const awayReceiveFormations = homeReceiveFormations.map(rot => {
       const mirrored = {};
       for (const [pNum, pos] of Object.entries(rot)) {
@@ -438,6 +494,10 @@
 
     function getPlayerCoords(p) {
       const stance = teamStances[p.team];
+      if (stance === 'defense') {
+        const blkSide = teamBlockSide[p.team];
+        return defenseFormations[p.team][blkSide][p.slotIndex];
+      }
       if (stance === 'receive') {
         const rot = teamRotation[p.team];
         const formationMap = p.team === 'home' ? homeReceiveFormations : awayReceiveFormations;
@@ -482,6 +542,20 @@
       document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
       document.getElementById(`${team}-btn-receive`).classList.toggle('active', stance === 'receive');
 
+      // Show or hide the block toggle buttons depending on whether Defense is selected
+      const blkToggle = document.getElementById(`block-${team}`);
+      blkToggle.style.display = (stance === 'defense') ? 'flex' : 'none';
+
+      updateTeamPositions(team);
+    }
+
+    function setBlockSide(team, side) {
+      teamBlockSide[team] = side;
+
+      ['left', 'mid', 'right'].forEach(s => {
+        document.getElementById(`${team}-blk-${s}`).classList.toggle('active', s === side);
+      });
+
       updateTeamPositions(team);
     }
 
@@ -496,12 +570,18 @@
     function resetPositions() {
       const rect = container.getBoundingClientRect();
       teamStances = { away: 'defense', home: 'defense' };
+      teamBlockSide = { away: 'mid', home: 'mid' };
       teamRotation = { away: 0, home: 0 };
 
       ['away', 'home'].forEach(t => {
         document.getElementById(`${t}-btn-defense`).classList.add('active');
         document.getElementById(`${t}-btn-offense`).classList.remove('active');
         document.getElementById(`${t}-btn-receive`).classList.remove('active');
+
+        document.getElementById(`block-${t}`).style.display = 'flex';
+        ['left', 'mid', 'right'].forEach(s => {
+          document.getElementById(`${t}-blk-${s}`).classList.toggle('active', s === 'mid');
+        });
       });
 
       playersData = [
