@@ -7,6 +7,43 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>排球战术板 Pro</title>
   <style>
+    :root {
+      /* Mobile base measurements */
+      --court-max-width: 380px;
+      --player-size: 42px;
+      --player-font: 13px;
+      --ball-size: 32px;
+      --btn-height: 36px;
+      --top-font: 12.5px;
+      --oncourt-font: 11px;
+    }
+
+    /* iPad / Tablet Breakpoint (Portrait & Landscape min-width 600px) */
+    @media (min-width: 600px) {
+      :root {
+        --court-max-width: 540px;
+        --player-size: 58px;
+        --player-font: 17px;
+        --ball-size: 44px;
+        --btn-height: 44px;
+        --top-font: 15px;
+        --oncourt-font: 13px;
+      }
+    }
+
+    /* Large Tablet / iPad Pro 11"+ (min-width 820px) */
+    @media (min-width: 820px) {
+      :root {
+        --court-max-width: 650px;
+        --player-size: 68px;
+        --player-font: 19px;
+        --ball-size: 50px;
+        --btn-height: 48px;
+        --top-font: 16px;
+        --oncourt-font: 14.5px;
+      }
+    }
+
     * {
       box-sizing: border-box;
       -webkit-touch-callout: none;
@@ -26,25 +63,23 @@
       height: 100vh;
       overflow: hidden;
       touch-action: none;
-      padding-top: max(4px, env(safe-area-inset-top));
-      padding-bottom: max(4px, env(safe-area-inset-bottom));
-      padding-left: 8px;
-      padding-right: 8px;
+      padding-top: max(6px, env(safe-area-inset-top));
+      padding-bottom: max(6px, env(safe-area-inset-bottom));
+      padding-left: 12px;
+      padding-right: 12px;
     }
 
-    /* Tight, Touch-Friendly 2-Row Top Toolbar */
+    /* Top Toolbar */
     #top-bar {
       width: 100%;
-      max-width: 360px;
+      max-width: var(--court-max-width);
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
       z-index: 100;
-      margin-top: 2px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
-    /* Row 1: Move + Draw */
     .toolbar-row-primary {
       display: flex;
       align-items: center;
@@ -55,7 +90,7 @@
       display: flex;
       align-items: center;
       width: 100%;
-      gap: 4px;
+      gap: 5px;
       background: #1e293b;
       padding: 4px;
       border-radius: 8px;
@@ -67,15 +102,15 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 9px 12px;
-      font-size: 13px;
+      height: var(--btn-height);
+      font-size: var(--top-font);
       font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 5px;
       white-space: nowrap;
     }
 
@@ -86,8 +121,8 @@
 
     .draw-sub-pill {
       display: flex;
-      gap: 3px;
-      padding-left: 4px;
+      gap: 4px;
+      padding-left: 6px;
       border-left: 1px solid #475569;
     }
 
@@ -95,8 +130,9 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 8px 10px;
-      font-size: 11.5px;
+      height: calc(var(--btn-height) - 6px);
+      padding: 0 12px;
+      font-size: calc(var(--top-font) - 1px);
       font-weight: 700;
       border-radius: 5px;
       cursor: pointer;
@@ -108,7 +144,6 @@
       color: #ffffff;
     }
 
-    /* Row 2: Undo/Erase Left, Reset Right */
     .toolbar-row-secondary {
       display: flex;
       align-items: center;
@@ -119,26 +154,22 @@
     .action-left {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .icon-btn {
       border: 1px solid #334155;
       background: #1e293b;
       color: #f1f5f9;
-      width: 44px;
-      height: 35px;
+      width: calc(var(--btn-height) * 1.2);
+      height: var(--btn-height);
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 7px;
-      font-size: 15px;
+      font-size: calc(var(--top-font) + 2px);
       font-weight: 800;
       cursor: pointer;
-    }
-
-    .icon-btn:active {
-      background: #334155;
     }
 
     .text-action-btn {
@@ -146,9 +177,9 @@
       background: #1e293b;
       color: #f1f5f9;
       font-weight: 700;
-      font-size: 12.5px;
-      padding: 0 14px;
-      height: 35px;
+      font-size: var(--top-font);
+      padding: 0 16px;
+      height: var(--btn-height);
       border-radius: 7px;
       cursor: pointer;
       white-space: nowrap;
@@ -157,26 +188,22 @@
       justify-content: center;
     }
 
-    .text-action-btn:active {
-      background: #334155;
-    }
-
-    /* Reset Button with Progress Ring Container */
+    /* Reset Button with Adaptive Dimensions */
     .reset-btn-wrapper {
       position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 72px;
-      height: 35px;
+      width: calc(var(--btn-height) * 2.1);
+      height: var(--btn-height);
     }
 
     .reset-ring-svg {
       position: absolute;
       top: -2px;
       left: -2px;
-      width: 76px;
-      height: 39px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
       pointer-events: none;
       z-index: 2;
     }
@@ -184,10 +211,11 @@
     .reset-ring-path {
       fill: none;
       stroke: #f87171;
-      stroke-width: 2.2;
+      stroke-width: 2.5;
       stroke-linecap: round;
-      stroke-dasharray: 204;
-      stroke-dashoffset: 204;
+      pathLength: 100;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
       filter: drop-shadow(0 0 3px rgba(248, 113, 113, 0.7));
       transition: stroke-dashoffset 0s linear;
     }
@@ -204,7 +232,7 @@
       background: rgba(239, 68, 68, 0.15);
       color: #fca5a5;
       font-weight: 700;
-      font-size: 12.5px;
+      font-size: var(--top-font);
       border-radius: 7px;
       cursor: pointer;
       white-space: nowrap;
@@ -219,17 +247,18 @@
       transform: scale(0.96);
     }
 
-    /* Court Board */
+    /* Responsive Court Board (Enlarges proportionally to max height available) */
     #board-container {
       position: relative;
-      width: min(92vw, 360px);
-      height: min(184vw, 680px, calc(100vh - 104px));
+      /* Dynamic aspect ratio preserving standard 1:2 volleyball court proportions */
+      width: min(94vw, var(--court-max-width), calc((100vh - 130px) * 0.5));
+      height: calc(min(94vw, var(--court-max-width), calc((100vh - 130px) * 0.5)) * 2);
       background-color: #d4a373;
-      border: 3.5px solid #ffffff;
-      border-radius: 6px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+      border: 4px solid #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
       overflow: hidden;
-      margin: 0;
+      margin: 0 auto;
     }
 
     .court-line {
@@ -242,7 +271,7 @@
       top: 50%;
       left: 0;
       width: 100%;
-      height: 4px;
+      height: 5px;
       background: #020617;
       transform: translateY(-50%);
       z-index: 2;
@@ -251,30 +280,30 @@
     #net::before, #net::after {
       content: '';
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       background: #cbd5e1;
       border-radius: 50%;
-      top: -3px;
+      top: -3.5px;
     }
-    #net::before { left: -3px; }
-    #net::after { right: -3px; }
+    #net::before { left: -4px; }
+    #net::after { right: -4px; }
 
     .attack-line-top {
       top: 33.33%;
       left: 0;
       width: 100%;
-      height: 2px;
+      height: 2.5px;
     }
 
     .attack-line-bottom {
       top: 66.66%;
       left: 0;
       width: 100%;
-      height: 2px;
+      height: 2.5px;
     }
 
-    /* Inside-Court Stance & Rotation Controls */
+    /* In-Court Tactical HUD */
     .on-court-strip {
       position: absolute;
       display: flex;
@@ -282,8 +311,8 @@
       gap: 3px;
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid #475569;
-      padding: 2.5px;
-      border-radius: 6px;
+      padding: 3px 4px;
+      border-radius: 7px;
       z-index: 30;
       backdrop-filter: blur(4px);
     }
@@ -292,8 +321,8 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 4px 6px;
-      font-size: 10.5px;
+      padding: 5px 8px;
+      font-size: var(--oncourt-font);
       font-weight: 700;
       border-radius: 4px;
       cursor: pointer;
@@ -313,8 +342,8 @@
 
     .blk-subgroup {
       display: flex;
-      gap: 2px;
-      padding-left: 2px;
+      gap: 3px;
+      padding-left: 3px;
       border-left: 1px solid #475569;
     }
 
@@ -323,14 +352,14 @@
       border: 1px solid #475569;
       background: rgba(15, 23, 42, 0.88);
       color: #f1f5f9;
-      padding: 4px 7px;
-      font-size: 10.5px;
+      padding: 6px 10px;
+      font-size: var(--oncourt-font);
       font-weight: 700;
-      border-radius: 6px;
+      border-radius: 7px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 3px;
       z-index: 30;
       backdrop-filter: blur(4px);
     }
@@ -339,10 +368,10 @@
       background: #334155;
     }
 
-    #away-stance-pill { top: 5px; left: 5px; }
-    #away-rotate-btn { top: 5px; right: 5px; }
-    #home-stance-pill { bottom: 5px; left: 5px; }
-    #home-rotate-btn { bottom: 5px; right: 5px; }
+    #away-stance-pill { top: 8px; left: 8px; }
+    #away-rotate-btn { top: 8px; right: 8px; }
+    #home-stance-pill { bottom: 8px; left: 8px; }
+    #home-rotate-btn { bottom: 8px; right: 8px; }
 
     #draw-layer {
       position: absolute;
@@ -353,22 +382,22 @@
       z-index: 5;
     }
 
-    /* Players */
+    /* Enlarged/Responsive Players */
     .player {
       position: absolute;
-      width: 44px;
-      height: 44px;
+      width: var(--player-size);
+      height: var(--player-size);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 13.5px;
+      font-size: var(--player-font);
       color: #ffffff;
       cursor: grab;
       touch-action: none;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
-      border: 2px solid #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.55);
+      border: 2.5px solid #ffffff;
       z-index: 10;
       transform: translate(-50%, -50%);
       letter-spacing: -0.5px;
@@ -378,10 +407,10 @@
     .player::after {
       content: '';
       position: absolute;
-      top: -8px;
-      left: -8px;
-      right: -8px;
-      bottom: -8px;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
       border-radius: 50%;
     }
 
@@ -402,14 +431,14 @@
     }
 
     .player:active {
-      transform: translate(-50%, -50%) scale(1.15);
+      transform: translate(-50%, -50%) scale(1.12);
     }
 
-    /* Volleyball */
+    /* Enlarged/Responsive Volleyball */
     #volleyball {
       position: absolute;
-      width: 34px;
-      height: 34px;
+      width: var(--ball-size);
+      height: var(--ball-size);
       border-radius: 50%;
       background: conic-gradient(
         #ffffff 0deg 60deg, 
@@ -419,8 +448,8 @@
         #facc15 240deg 300deg, 
         #2563eb 300deg 360deg
       );
-      border: 2px solid #0f172a;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.65);
+      border: 2.5px solid #0f172a;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.65);
       z-index: 15;
       transform: translate(-50%, -50%);
       cursor: grab;
@@ -435,23 +464,22 @@
     #volleyball::after {
       content: '';
       position: absolute;
-      top: -8px;
-      left: -8px;
-      right: -8px;
-      bottom: -8px;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
       border-radius: 50%;
     }
 
     #volleyball:active {
-      transform: translate(-50%, -50%) scale(1.2);
+      transform: translate(-50%, -50%) scale(1.15);
     }
   </style>
 </head>
 <body>
 
-  <!-- Touch-Friendly 2-Row Top Toolbar -->
+  <!-- Top Toolbar -->
   <div id="top-bar">
-    <!-- Row 1: Move & Draw (with expandable line pill) -->
     <div class="toolbar-row-primary">
       <div class="tool-group">
         <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
@@ -464,7 +492,6 @@
       </div>
     </div>
 
-    <!-- Row 2: Undo/Erase Left, Reset Right -->
     <div class="toolbar-row-secondary">
       <div class="action-left">
         <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
@@ -472,21 +499,20 @@
       </div>
 
       <div id="reset-wrapper" class="reset-btn-wrapper">
-        <svg class="reset-ring-svg" viewBox="0 0 76 39">
-          <rect class="reset-ring-path" x="2" y="2" width="72" height="35" rx="7" ry="7" />
+        <svg class="reset-ring-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <rect class="reset-ring-path" x="3" y="3" width="94" height="94" rx="14" ry="14" />
         </svg>
         <button id="reset-btn" class="reset-btn" title="轻触：还原当前战术站位并清屏 | 长按：重置整场">重置</button>
       </div>
     </div>
   </div>
 
-  <!-- Court Board (Docked closer to top bar) -->
+  <!-- Court Board -->
   <div id="board-container">
     <div id="net" class="court-line"></div>
     <div class="attack-line-top court-line"></div>
     <div class="attack-line-bottom court-line"></div>
 
-    <!-- Away Controls: Order 接, 攻, 防 + [左, 中, 右] -->
     <div id="away-stance-pill" class="on-court-strip">
       <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
       <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
@@ -499,7 +525,6 @@
     </div>
     <button id="away-rotate-btn" class="on-court-rotate" onclick="rotateTeam('away')">🔄 轮转</button>
 
-    <!-- Home Controls: Order 接, 攻, 防 + [左, 中, 右] -->
     <div id="home-stance-pill" class="on-court-strip">
       <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
       <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
@@ -533,7 +558,6 @@
     let strokes = [];
     let currentStroke = [];
 
-    // Option A Match Boot: Away = Defense/Serve, Home = Receive
     let teamStances = {
       away: 'defense',
       home: 'receive'
@@ -656,8 +680,12 @@
     ];
 
     function initCanvas() {
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
+      // Scale canvas resolution with device pixel ratio for retina screens
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = container.clientWidth * dpr;
+      canvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
       redrawAllStrokes();
     }
 
@@ -708,12 +736,11 @@
         div.style.left = `${coords.x * rect.width}px`;
         div.style.top = `${coords.y * rect.height}px`;
 
-        makeDraggable(div, 22);
+        makeDraggable(div);
         playersLayer.appendChild(div);
       });
     }
 
-    // Static dedicated position for volleyball (bottom-right server spot)
     function setBallStaticPosition() {
       const rect = container.getBoundingClientRect();
       ball.style.left = `${rect.width * 0.78}px`;
@@ -724,9 +751,11 @@
       const rect = container.getBoundingClientRect();
       playersData.filter(p => p.team === team).forEach(p => {
         const el = document.getElementById(p.id);
-        const coords = getPlayerCoords(p);
-        el.style.left = `${coords.x * rect.width}px`;
-        el.style.top = `${coords.y * rect.height}px`;
+        if (el) {
+          const coords = getPlayerCoords(p);
+          el.style.left = `${coords.x * rect.width}px`;
+          el.style.top = `${coords.y * rect.height}px`;
+        }
       });
     }
 
@@ -761,7 +790,6 @@
       updateTeamPositions(team);
     }
 
-    // Tap Reset: Snaps current formation, ball to static spot, clears drawings, preserves active stances & rotations
     function resetToCurrentFormation() {
       updateTeamPositions('away');
       updateTeamPositions('home');
@@ -769,13 +797,11 @@
       clearCanvas();
     }
 
-    // Full Match Reset (Long-Press): Reboots game from start
     function fullMatchReset() {
       teamStances = { away: 'defense', home: 'receive' };
       teamBlockSide = { away: 'mid', home: 'mid' };
       teamRotation = { away: 0, home: 0 };
 
-      // Away Defense UI
       document.getElementById('away-btn-receive').classList.remove('active');
       document.getElementById('away-btn-offense').classList.remove('active');
       document.getElementById('away-btn-defense').classList.add('active');
@@ -784,7 +810,6 @@
         document.getElementById(`away-blk-${s}`).classList.toggle('active', s === 'mid');
       });
 
-      // Home Receive UI
       document.getElementById('home-btn-receive').classList.add('active');
       document.getElementById('home-btn-offense').classList.remove('active');
       document.getElementById('home-btn-defense').classList.remove('active');
@@ -807,7 +832,6 @@
       setBallStaticPosition();
     }
 
-    // Reset interaction: extended long-press duration (1.4s)
     let resetTimer = null;
     let didLongPress = false;
 
@@ -839,7 +863,7 @@
     resetBtn.addEventListener('pointercancel', cancelResetCharge);
     resetBtn.addEventListener('pointerleave', cancelResetCharge);
 
-    function makeDraggable(el, radius = 22) {
+    function makeDraggable(el) {
       let activeTouchId = null;
 
       el.addEventListener('pointerdown', (e) => {
@@ -852,8 +876,10 @@
       el.addEventListener('pointermove', (e) => {
         if (e.pointerId !== activeTouchId) return;
         const rect = container.getBoundingClientRect();
-        let x = Math.max(radius, Math.min(rect.width - radius, e.clientX - rect.left));
-        let y = Math.max(radius, Math.min(rect.height - radius, e.clientY - rect.top));
+        const halfWidth = el.offsetWidth / 2;
+        const halfHeight = el.offsetHeight / 2;
+        let x = Math.max(halfWidth, Math.min(rect.width - halfWidth, e.clientX - rect.left));
+        let y = Math.max(halfHeight, Math.min(rect.height - halfHeight, e.clientY - rect.top));
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
       });
@@ -873,16 +899,20 @@
       if (currentMode !== 'draw') return;
       isDrawing = true;
       const rect = canvas.getBoundingClientRect();
+      // Store relative coords (0.0 to 1.0) so drawings scale on resize/orientation switch
       currentStroke = [{
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
+        rx: (e.clientX - rect.left) / rect.width,
+        ry: (e.clientY - rect.top) / rect.height
       }];
     }
 
     function draw(e) {
       if (!isDrawing || currentMode !== 'draw') return;
       const rect = canvas.getBoundingClientRect();
-      const pt = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      const pt = { 
+        rx: (e.clientX - rect.left) / rect.width, 
+        ry: (e.clientY - rect.top) / rect.height 
+      };
       currentStroke.push(pt);
 
       redrawAllStrokes();
@@ -907,21 +937,23 @@
       redrawAllStrokes();
     }
 
-    function drawArrowHead(from, to, color) {
-      const headlen = 11;
-      const dx = to.x - from.x;
-      const dy = to.y - from.y;
+    function drawArrowHead(from, to, color, w, h) {
+      const headlen = Math.max(10, w * 0.03);
+      const dx = (to.rx - from.rx) * w;
+      const dy = (to.ry - from.ry) * h;
       const angle = Math.atan2(dy, dx);
+      const targetX = to.rx * w;
+      const targetY = to.ry * h;
 
       ctx.save();
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.setLineDash([]);
       ctx.beginPath();
-      ctx.moveTo(to.x, to.y);
-      ctx.lineTo(to.x - headlen * Math.cos(angle - Math.PI / 6), to.y - headlen * Math.sin(angle - Math.PI / 6));
-      ctx.lineTo(to.x - headlen * Math.cos(angle + Math.PI / 6), to.y - headlen * Math.sin(angle + Math.PI / 6));
+      ctx.moveTo(targetX, targetY);
+      ctx.lineTo(targetX - headlen * Math.cos(angle - Math.PI / 6), targetY - headlen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(targetX - headlen * Math.cos(angle + Math.PI / 6), targetY - headlen * Math.sin(angle + Math.PI / 6));
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
@@ -931,18 +963,20 @@
     function renderSingleStroke(stroke) {
       const pts = stroke.points;
       if (pts.length < 2) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
 
       ctx.save();
       ctx.strokeStyle = stroke.color;
-      ctx.lineWidth = 3.5;
+      ctx.lineWidth = Math.max(3.5, w * 0.009);
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.setLineDash(stroke.style === 'dash' ? [8, 6] : []);
 
       ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
+      ctx.moveTo(pts[0].rx * w, pts[0].ry * h);
       for (let i = 1; i < pts.length; i++) {
-        ctx.lineTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[i].rx * w, pts[i].ry * h);
       }
       ctx.stroke();
       ctx.restore();
@@ -950,12 +984,12 @@
       if (stroke.style !== 'free') {
         const last = pts[pts.length - 1];
         const prev = pts[Math.max(0, pts.length - 4)];
-        drawArrowHead(prev, last, stroke.color);
+        drawArrowHead(prev, last, stroke.color, w, h);
       }
     }
 
     function redrawAllStrokes() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, container.clientWidth, container.clientHeight);
       strokes.forEach(s => renderSingleStroke(s));
     }
 
@@ -977,14 +1011,18 @@
     window.addEventListener('load', () => {
       initCanvas();
       fullMatchReset();
-      makeDraggable(ball, 17);
+      makeDraggable(ball);
       setInteractionMode('move');
     });
 
-    window.addEventListener('resize', () => {
+    // ResizeObserver cleanly updates canvas resolution and positions on screen rotation or iPad multitasking split
+    const resizeObserver = new ResizeObserver(() => {
       initCanvas();
+      updateTeamPositions('away');
+      updateTeamPositions('home');
       setBallStaticPosition();
     });
+    resizeObserver.observe(container);
   </script>
 </body>
 </html>
