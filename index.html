@@ -8,40 +8,14 @@
   <title>排球战术板 Pro</title>
   <style>
     :root {
-      /* Mobile base measurements */
-      --court-max-width: 380px;
-      --player-size: 42px;
-      --player-font: 13px;
-      --ball-size: 32px;
-      --btn-height: 36px;
-      --top-font: 12.5px;
-      --oncourt-font: 11px;
-    }
-
-    /* iPad / Tablet Breakpoint (Portrait & Landscape min-width 600px) */
-    @media (min-width: 600px) {
-      :root {
-        --court-max-width: 540px;
-        --player-size: 58px;
-        --player-font: 17px;
-        --ball-size: 44px;
-        --btn-height: 44px;
-        --top-font: 15px;
-        --oncourt-font: 13px;
-      }
-    }
-
-    /* Large Tablet / iPad Pro 11"+ (min-width 820px) */
-    @media (min-width: 820px) {
-      :root {
-        --court-max-width: 650px;
-        --player-size: 68px;
-        --player-font: 19px;
-        --ball-size: 50px;
-        --btn-height: 48px;
-        --top-font: 16px;
-        --oncourt-font: 14.5px;
-      }
+      --court-w: 360px;
+      --court-h: 720px;
+      --scale: 1;
+      --player-size: calc(44px * var(--scale));
+      --ball-size: calc(34px * var(--scale));
+      --btn-h: calc(36px * var(--scale));
+      --font-main: calc(13px * var(--scale));
+      --font-hud: calc(11px * var(--scale));
     }
 
     * {
@@ -56,28 +30,35 @@
     body {
       background-color: #0f172a;
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      width: 100vw;
       height: 100vh;
       overflow: hidden;
       touch-action: none;
-      padding-top: max(6px, env(safe-area-inset-top));
-      padding-bottom: max(6px, env(safe-area-inset-bottom));
-      padding-left: 12px;
-      padding-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
-    /* Top Toolbar */
-    #top-bar {
-      width: 100%;
-      max-width: var(--court-max-width);
+    /* Master layout stage: Always locks toolbar and court to identical width */
+    #app-stage {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      justify-content: center;
+      gap: calc(8px * var(--scale));
+      width: var(--court-w);
+      height: auto;
+      max-height: 100%;
+    }
+
+    /* Top Toolbar: Bound 100% to court width */
+    #top-bar {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: calc(6px * var(--scale));
       z-index: 100;
-      margin-bottom: 6px;
     }
 
     .toolbar-row-primary {
@@ -90,10 +71,10 @@
       display: flex;
       align-items: center;
       width: 100%;
-      gap: 5px;
+      gap: 4px;
       background: #1e293b;
-      padding: 4px;
-      border-radius: 8px;
+      padding: calc(3px * var(--scale));
+      border-radius: calc(8px * var(--scale));
       border: 1px solid #334155;
     }
 
@@ -102,15 +83,15 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      height: var(--btn-height);
-      font-size: var(--top-font);
+      height: var(--btn-h);
+      font-size: var(--font-main);
       font-weight: 700;
-      border-radius: 6px;
+      border-radius: calc(6px * var(--scale));
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 4px;
       white-space: nowrap;
     }
 
@@ -121,8 +102,8 @@
 
     .draw-sub-pill {
       display: flex;
-      gap: 4px;
-      padding-left: 6px;
+      gap: 3px;
+      padding-left: calc(4px * var(--scale));
       border-left: 1px solid #475569;
     }
 
@@ -130,11 +111,11 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      height: calc(var(--btn-height) - 6px);
-      padding: 0 12px;
-      font-size: calc(var(--top-font) - 1px);
+      height: calc(var(--btn-h) - 6px);
+      padding: 0 calc(8px * var(--scale));
+      font-size: calc(var(--font-main) - 1px);
       font-weight: 700;
-      border-radius: 5px;
+      border-radius: calc(5px * var(--scale));
       cursor: pointer;
       white-space: nowrap;
     }
@@ -154,22 +135,26 @@
     .action-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: calc(6px * var(--scale));
     }
 
     .icon-btn {
       border: 1px solid #334155;
       background: #1e293b;
       color: #f1f5f9;
-      width: calc(var(--btn-height) * 1.2);
-      height: var(--btn-height);
+      width: calc(var(--btn-h) * 1.2);
+      height: var(--btn-h);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 7px;
-      font-size: calc(var(--top-font) + 2px);
+      border-radius: calc(7px * var(--scale));
+      font-size: calc(var(--font-main) + 2px);
       font-weight: 800;
       cursor: pointer;
+    }
+
+    .icon-btn:active, .text-action-btn:active {
+      background: #334155;
     }
 
     .text-action-btn {
@@ -177,10 +162,10 @@
       background: #1e293b;
       color: #f1f5f9;
       font-weight: 700;
-      font-size: var(--top-font);
-      padding: 0 16px;
-      height: var(--btn-height);
-      border-radius: 7px;
+      font-size: var(--font-main);
+      padding: 0 calc(14px * var(--scale));
+      height: var(--btn-h);
+      border-radius: calc(7px * var(--scale));
       cursor: pointer;
       white-space: nowrap;
       display: flex;
@@ -188,14 +173,14 @@
       justify-content: center;
     }
 
-    /* Reset Button with Adaptive Dimensions */
+    /* Reset Button */
     .reset-btn-wrapper {
       position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: calc(var(--btn-height) * 2.1);
-      height: var(--btn-height);
+      width: calc(var(--btn-h) * 2.1);
+      height: var(--btn-h);
     }
 
     .reset-ring-svg {
@@ -232,8 +217,8 @@
       background: rgba(239, 68, 68, 0.15);
       color: #fca5a5;
       font-weight: 700;
-      font-size: var(--top-font);
-      border-radius: 7px;
+      font-size: var(--font-main);
+      border-radius: calc(7px * var(--scale));
       cursor: pointer;
       white-space: nowrap;
       display: flex;
@@ -247,18 +232,17 @@
       transform: scale(0.96);
     }
 
-    /* Responsive Court Board (Enlarges proportionally to max height available) */
+    /* Court Board (Dynamic Width & Exact 1:2 Aspect Ratio) */
     #board-container {
       position: relative;
-      /* Dynamic aspect ratio preserving standard 1:2 volleyball court proportions */
-      width: min(94vw, var(--court-max-width), calc((100vh - 130px) * 0.5));
-      height: calc(min(94vw, var(--court-max-width), calc((100vh - 130px) * 0.5)) * 2);
+      width: var(--court-w);
+      height: var(--court-h);
       background-color: #d4a373;
-      border: 4px solid #ffffff;
-      border-radius: 8px;
+      border: calc(3.5px * var(--scale)) solid #ffffff;
+      border-radius: calc(8px * var(--scale));
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
       overflow: hidden;
-      margin: 0 auto;
+      flex-shrink: 0;
     }
 
     .court-line {
@@ -271,7 +255,7 @@
       top: 50%;
       left: 0;
       width: 100%;
-      height: 5px;
+      height: calc(4px * var(--scale));
       background: #020617;
       transform: translateY(-50%);
       z-index: 2;
@@ -280,30 +264,30 @@
     #net::before, #net::after {
       content: '';
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: calc(10px * var(--scale));
+      height: calc(10px * var(--scale));
       background: #cbd5e1;
       border-radius: 50%;
-      top: -3.5px;
+      top: calc(-3px * var(--scale));
     }
-    #net::before { left: -4px; }
-    #net::after { right: -4px; }
+    #net::before { left: calc(-3px * var(--scale)); }
+    #net::after { right: calc(-3px * var(--scale)); }
 
     .attack-line-top {
-      top: 33.33%;
+      top: 33.333%;
       left: 0;
       width: 100%;
-      height: 2.5px;
+      height: calc(2.2px * var(--scale));
     }
 
     .attack-line-bottom {
-      top: 66.66%;
+      top: 66.666%;
       left: 0;
       width: 100%;
-      height: 2.5px;
+      height: calc(2.2px * var(--scale));
     }
 
-    /* In-Court Tactical HUD */
+    /* On-court Tactical Pills: Scaled & Inset */
     .on-court-strip {
       position: absolute;
       display: flex;
@@ -311,8 +295,8 @@
       gap: 3px;
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid #475569;
-      padding: 3px 4px;
-      border-radius: 7px;
+      padding: calc(3px * var(--scale));
+      border-radius: calc(6px * var(--scale));
       z-index: 30;
       backdrop-filter: blur(4px);
     }
@@ -321,10 +305,10 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 5px 8px;
-      font-size: var(--oncourt-font);
+      padding: calc(4px * var(--scale)) calc(7px * var(--scale));
+      font-size: var(--font-hud);
       font-weight: 700;
-      border-radius: 4px;
+      border-radius: calc(4px * var(--scale));
       cursor: pointer;
     }
 
@@ -342,7 +326,7 @@
 
     .blk-subgroup {
       display: flex;
-      gap: 3px;
+      gap: 2px;
       padding-left: 3px;
       border-left: 1px solid #475569;
     }
@@ -352,10 +336,10 @@
       border: 1px solid #475569;
       background: rgba(15, 23, 42, 0.88);
       color: #f1f5f9;
-      padding: 6px 10px;
-      font-size: var(--oncourt-font);
+      padding: calc(4px * var(--scale)) calc(8px * var(--scale));
+      font-size: var(--font-hud);
       font-weight: 700;
-      border-radius: 7px;
+      border-radius: calc(6px * var(--scale));
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -368,10 +352,10 @@
       background: #334155;
     }
 
-    #away-stance-pill { top: 8px; left: 8px; }
-    #away-rotate-btn { top: 8px; right: 8px; }
-    #home-stance-pill { bottom: 8px; left: 8px; }
-    #home-rotate-btn { bottom: 8px; right: 8px; }
+    #away-stance-pill { top: calc(6px * var(--scale)); left: calc(6px * var(--scale)); }
+    #away-rotate-btn { top: calc(6px * var(--scale)); right: calc(6px * var(--scale)); }
+    #home-stance-pill { bottom: calc(6px * var(--scale)); left: calc(6px * var(--scale)); }
+    #home-rotate-btn { bottom: calc(6px * var(--scale)); right: calc(6px * var(--scale)); }
 
     #draw-layer {
       position: absolute;
@@ -382,7 +366,7 @@
       z-index: 5;
     }
 
-    /* Enlarged/Responsive Players */
+    /* Player Nodes */
     .player {
       position: absolute;
       width: var(--player-size);
@@ -392,12 +376,12 @@
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: var(--player-font);
+      font-size: var(--font-main);
       color: #ffffff;
       cursor: grab;
       touch-action: none;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.55);
-      border: 2.5px solid #ffffff;
+      border: calc(2.2px * var(--scale)) solid #ffffff;
       z-index: 10;
       transform: translate(-50%, -50%);
       letter-spacing: -0.5px;
@@ -421,20 +405,14 @@
     .away { background: #dc2626; }
     .home { background: #2563eb; }
 
-    .away.setter { 
-      background: #f87171; 
-      color: #ffffff;
-    }
-    .home.setter { 
-      background: #60a5fa; 
-      color: #ffffff;
-    }
+    .away.setter { background: #f87171; }
+    .home.setter { background: #60a5fa; }
 
     .player:active {
       transform: translate(-50%, -50%) scale(1.12);
     }
 
-    /* Enlarged/Responsive Volleyball */
+    /* Volleyball */
     #volleyball {
       position: absolute;
       width: var(--ball-size);
@@ -448,7 +426,7 @@
         #facc15 240deg 300deg, 
         #2563eb 300deg 360deg
       );
-      border: 2.5px solid #0f172a;
+      border: calc(2px * var(--scale)) solid #0f172a;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.65);
       z-index: 15;
       transform: translate(-50%, -50%);
@@ -474,72 +452,115 @@
     #volleyball:active {
       transform: translate(-50%, -50%) scale(1.15);
     }
+
+    /* iPad/Desktop Landscape optimization: side-by-side docking */
+    @media (orientation: landscape) and (min-height: 480px) {
+      #app-stage {
+        flex-direction: row;
+        width: auto;
+        gap: 16px;
+      }
+      #top-bar {
+        width: 170px;
+      }
+      .toolbar-row-primary, .toolbar-row-secondary {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+      .tool-group {
+        flex-direction: column;
+        width: 100%;
+      }
+      .tool-group > button {
+        width: 100%;
+      }
+      .draw-sub-pill {
+        border-left: none;
+        border-top: 1px solid #475569;
+        padding-left: 0;
+        padding-top: 4px;
+        width: 100%;
+        justify-content: center;
+      }
+      .action-left {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .reset-btn-wrapper {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Toolbar -->
-  <div id="top-bar">
-    <div class="toolbar-row-primary">
-      <div class="tool-group">
-        <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
-        <button id="mode-draw-btn" onclick="activateDrawMode()">✏️ 画笔</button>
-        <div id="draw-sub-pill" class="draw-sub-pill" style="display: none;">
-          <button id="draw-style-free" class="active" onclick="setDrawStyle('free')">自由</button>
-          <button id="draw-style-solid" onclick="setDrawStyle('solid')">实线</button>
-          <button id="draw-style-dash" onclick="setDrawStyle('dash')">虚线</button>
+  <div id="app-stage">
+    <!-- Top Toolbar -->
+    <div id="top-bar">
+      <div class="toolbar-row-primary">
+        <div class="tool-group">
+          <button id="mode-move" class="active" onclick="setInteractionMode('move')">✋ 移动</button>
+          <button id="mode-draw-btn" onclick="activateDrawMode()">✏️ 画笔</button>
+          <div id="draw-sub-pill" class="draw-sub-pill" style="display: none;">
+            <button id="draw-style-free" class="active" onclick="setDrawStyle('free')">自由</button>
+            <button id="draw-style-solid" onclick="setDrawStyle('solid')">实线</button>
+            <button id="draw-style-dash" onclick="setDrawStyle('dash')">虚线</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar-row-secondary">
+        <div class="action-left">
+          <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
+          <button class="text-action-btn" onclick="clearCanvas()">清屏</button>
+        </div>
+
+        <div id="reset-wrapper" class="reset-btn-wrapper">
+          <svg class="reset-ring-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect class="reset-ring-path" x="3" y="3" width="94" height="94" rx="14" ry="14" />
+          </svg>
+          <button id="reset-btn" class="reset-btn" title="轻触：还原当前战术站位并清屏 | 长按：重置整场">重置</button>
         </div>
       </div>
     </div>
 
-    <div class="toolbar-row-secondary">
-      <div class="action-left">
-        <button class="icon-btn" onclick="undoLine()" title="撤销">↩</button>
-        <button class="text-action-btn" onclick="clearCanvas()">清屏</button>
-      </div>
+    <!-- Court Board -->
+    <div id="board-container">
+      <div id="net" class="court-line"></div>
+      <div class="attack-line-top court-line"></div>
+      <div class="attack-line-bottom court-line"></div>
 
-      <div id="reset-wrapper" class="reset-btn-wrapper">
-        <svg class="reset-ring-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <rect class="reset-ring-path" x="3" y="3" width="94" height="94" rx="14" ry="14" />
-        </svg>
-        <button id="reset-btn" class="reset-btn" title="轻触：还原当前战术站位并清屏 | 长按：重置整场">重置</button>
+      <!-- Away Tactical Strip -->
+      <div id="away-stance-pill" class="on-court-strip">
+        <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
+        <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
+        <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">防</button>
+        <div id="away-blk-wrap" class="blk-subgroup">
+          <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
+          <button id="away-blk-mid" class="active" onclick="setBlockSide('away', 'mid')">中</button>
+          <button id="away-blk-right" onclick="setBlockSide('away', 'right')">右</button>
+        </div>
       </div>
+      <button id="away-rotate-btn" class="on-court-rotate" onclick="rotateTeam('away')">🔄 轮转</button>
+
+      <!-- Home Tactical Strip -->
+      <div id="home-stance-pill" class="on-court-strip">
+        <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
+        <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
+        <button id="home-btn-defense" onclick="setTeamStance('home', 'defense')">防</button>
+        <div id="home-blk-wrap" class="blk-subgroup" style="display: none;">
+          <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
+          <button id="home-blk-mid" class="active" onclick="setBlockSide('home', 'mid')">中</button>
+          <button id="home-blk-right" onclick="setBlockSide('home', 'right')">右</button>
+        </div>
+      </div>
+      <button id="home-rotate-btn" class="on-court-rotate" onclick="rotateTeam('home')">🔄 轮转</button>
+
+      <canvas id="draw-layer"></canvas>
+      <div id="volleyball"></div>
+      <div id="players-layer"></div>
     </div>
-  </div>
-
-  <!-- Court Board -->
-  <div id="board-container">
-    <div id="net" class="court-line"></div>
-    <div class="attack-line-top court-line"></div>
-    <div class="attack-line-bottom court-line"></div>
-
-    <div id="away-stance-pill" class="on-court-strip">
-      <button id="away-btn-receive" onclick="setTeamStance('away', 'receive')">接</button>
-      <button id="away-btn-offense" onclick="setTeamStance('away', 'offense')">攻</button>
-      <button id="away-btn-defense" class="active" onclick="setTeamStance('away', 'defense')">防</button>
-      <div id="away-blk-wrap" class="blk-subgroup">
-        <button id="away-blk-left" onclick="setBlockSide('away', 'left')">左</button>
-        <button id="away-blk-mid" class="active" onclick="setBlockSide('away', 'mid')">中</button>
-        <button id="away-blk-right" onclick="setBlockSide('away', 'right')">右</button>
-      </div>
-    </div>
-    <button id="away-rotate-btn" class="on-court-rotate" onclick="rotateTeam('away')">🔄 轮转</button>
-
-    <div id="home-stance-pill" class="on-court-strip">
-      <button id="home-btn-receive" class="active" onclick="setTeamStance('home', 'receive')">接</button>
-      <button id="home-btn-offense" onclick="setTeamStance('home', 'offense')">攻</button>
-      <button id="home-btn-defense" onclick="setTeamStance('home', 'defense')">防</button>
-      <div id="home-blk-wrap" class="blk-subgroup" style="display: none;">
-        <button id="home-blk-left" onclick="setBlockSide('home', 'left')">左</button>
-        <button id="home-blk-mid" class="active" onclick="setBlockSide('home', 'mid')">中</button>
-        <button id="home-blk-right" onclick="setBlockSide('home', 'right')">右</button>
-      </div>
-    </div>
-    <button id="home-rotate-btn" class="on-court-rotate" onclick="rotateTeam('home')">🔄 轮转</button>
-
-    <canvas id="draw-layer"></canvas>
-    <div id="volleyball"></div>
-    <div id="players-layer"></div>
   </div>
 
   <script>
@@ -548,7 +569,6 @@
     const ctx = canvas.getContext('2d');
     const playersLayer = document.getElementById('players-layer');
     const ball = document.getElementById('volleyball');
-
     const resetWrapper = document.getElementById('reset-wrapper');
     const resetBtn = document.getElementById('reset-btn');
 
@@ -558,20 +578,9 @@
     let strokes = [];
     let currentStroke = [];
 
-    let teamStances = {
-      away: 'defense',
-      home: 'receive'
-    };
-
-    let teamBlockSide = {
-      away: 'mid',
-      home: 'mid'
-    };
-
-    let teamRotation = {
-      away: 0,
-      home: 0
-    };
+    let teamStances = { away: 'defense', home: 'receive' };
+    let teamBlockSide = { away: 'mid', home: 'mid' };
+    let teamRotation = { away: 0, home: 0 };
 
     function getStrokeColor(style) {
       if (style === 'dash') return '#ffffff';
@@ -579,51 +588,85 @@
       return '#ef4444';
     }
 
+    /* Auto-Geometry Sizing Engine: Calculates exact 1:2 aspect ratio fit */
+    function recalculateLayout() {
+      const isLandscape = window.innerWidth > window.innerHeight && window.innerHeight >= 480;
+      const padX = 24;
+      const padY = 24;
+      const availW = window.innerWidth - padX;
+      const availH = window.innerHeight - padY;
+
+      let courtW, courtH;
+
+      if (isLandscape) {
+        // Landscape: Toolbar is placed side-by-side (170px + 16px gap)
+        const maxH = availH;
+        const maxW = availW - 186;
+        if (maxW * 2 <= maxH) {
+          courtW = maxW;
+          courtH = maxW * 2;
+        } else {
+          courtH = maxH;
+          courtW = maxH / 2;
+        }
+      } else {
+        // Portrait (iPhone / iPad Portrait): Toolbar is stacked on top
+        const estimatedTopBarH = 88;
+        const maxH = availH - estimatedTopBarH;
+        const maxW = Math.min(availW, 640); // Cap on large tablet portrait
+
+        if (maxW * 2 <= maxH) {
+          courtW = maxW;
+          courtH = maxW * 2;
+        } else {
+          courtH = maxH;
+          courtW = maxH / 2;
+        }
+      }
+
+      courtW = Math.floor(courtW);
+      courtH = Math.floor(courtH);
+
+      // Baseline scale 1.0 is calibrated to mobile 360px width
+      const scale = Math.max(0.85, Math.min(1.8, courtW / 360));
+
+      document.documentElement.style.setProperty('--court-w', `${courtW}px`);
+      document.documentElement.style.setProperty('--court-h', `${courtH}px`);
+      document.documentElement.style.setProperty('--scale', scale.toFixed(3));
+
+      initCanvas();
+      updateTeamPositions('away');
+      updateTeamPositions('home');
+      setBallStaticPosition();
+    }
+
     const defenseFormations = {
       away: {
         left: [
-          { x: 0.20, y: 0.44 },
-          { x: 0.33, y: 0.44 },
-          { x: 0.46, y: 0.44 },
-          { x: 0.90, y: 0.26 },
-          { x: 0.10, y: 0.30 }
+          { x: 0.20, y: 0.44 }, { x: 0.33, y: 0.44 }, { x: 0.46, y: 0.44 },
+          { x: 0.88, y: 0.25 }, { x: 0.12, y: 0.28 }
         ],
         mid: [
-          { x: 0.35, y: 0.44 },
-          { x: 0.50, y: 0.44 },
-          { x: 0.65, y: 0.44 },
-          { x: 0.80, y: 0.18 },
-          { x: 0.20, y: 0.18 }
+          { x: 0.35, y: 0.44 }, { x: 0.50, y: 0.44 }, { x: 0.65, y: 0.44 },
+          { x: 0.80, y: 0.18 }, { x: 0.20, y: 0.18 }
         ],
         right: [
-          { x: 0.54, y: 0.44 },
-          { x: 0.67, y: 0.44 },
-          { x: 0.80, y: 0.44 },
-          { x: 0.90, y: 0.30 },
-          { x: 0.10, y: 0.26 }
+          { x: 0.54, y: 0.44 }, { x: 0.67, y: 0.44 }, { x: 0.80, y: 0.44 },
+          { x: 0.88, y: 0.28 }, { x: 0.12, y: 0.25 }
         ]
       },
       home: {
         left: [
-          { x: 0.20, y: 0.56 },
-          { x: 0.33, y: 0.56 },
-          { x: 0.46, y: 0.56 },
-          { x: 0.90, y: 0.74 },
-          { x: 0.10, y: 0.70 }
+          { x: 0.20, y: 0.56 }, { x: 0.33, y: 0.56 }, { x: 0.46, y: 0.56 },
+          { x: 0.88, y: 0.75 }, { x: 0.12, y: 0.72 }
         ],
         mid: [
-          { x: 0.35, y: 0.56 },
-          { x: 0.50, y: 0.56 },
-          { x: 0.65, y: 0.56 },
-          { x: 0.80, y: 0.82 },
-          { x: 0.20, y: 0.82 }
+          { x: 0.35, y: 0.56 }, { x: 0.50, y: 0.56 }, { x: 0.65, y: 0.56 },
+          { x: 0.80, y: 0.82 }, { x: 0.20, y: 0.82 }
         ],
         right: [
-          { x: 0.54, y: 0.56 },
-          { x: 0.67, y: 0.56 },
-          { x: 0.80, y: 0.56 },
-          { x: 0.90, y: 0.70 },
-          { x: 0.10, y: 0.74 }
+          { x: 0.54, y: 0.56 }, { x: 0.67, y: 0.56 }, { x: 0.80, y: 0.56 },
+          { x: 0.88, y: 0.72 }, { x: 0.12, y: 0.75 }
         ]
       }
     };
@@ -631,30 +674,24 @@
     const staticFormations = {
       away: {
         offense: [
-          { x: 0.08, y: 0.26 },
-          { x: 0.58, y: 0.42 },
-          { x: 0.92, y: 0.26 },
-          { x: 0.65, y: 0.12 },
-          { x: 0.38, y: 0.26 }
+          { x: 0.12, y: 0.25 }, { x: 0.58, y: 0.42 }, { x: 0.88, y: 0.25 },
+          { x: 0.65, y: 0.12 }, { x: 0.38, y: 0.25 }
         ]
       },
       home: {
         offense: [
-          { x: 0.08, y: 0.74 },
-          { x: 0.58, y: 0.58 },
-          { x: 0.92, y: 0.74 },
-          { x: 0.65, y: 0.88 },
-          { x: 0.38, y: 0.74 }
+          { x: 0.12, y: 0.75 }, { x: 0.58, y: 0.58 }, { x: 0.88, y: 0.75 },
+          { x: 0.65, y: 0.88 }, { x: 0.38, y: 0.75 }
         ]
       }
     };
 
     const homeReceiveFormations = [
-      { '1': { x: 0.64, y: 0.87 }, '2': { x: 0.78, y: 0.72 }, '3': { x: 0.50, y: 0.55 }, '4': { x: 0.22, y: 0.72 }, '5': { x: 0.50, y: 0.74 } },
-      { '1': { x: 0.50, y: 0.74 }, '2': { x: 0.68, y: 0.87 }, '3': { x: 0.82, y: 0.55 }, '4': { x: 0.76, y: 0.72 }, '5': { x: 0.22, y: 0.72 } },
-      { '1': { x: 0.22, y: 0.72 }, '2': { x: 0.50, y: 0.74 }, '3': { x: 0.68, y: 0.87 }, '4': { x: 0.78, y: 0.72 }, '5': { x: 0.50, y: 0.55 } },
-      { '1': { x: 0.76, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.50, y: 0.74 }, '4': { x: 0.68, y: 0.87 }, '5': { x: 0.82, y: 0.55 } },
-      { '1': { x: 0.78, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.16, y: 0.55 }, '4': { x: 0.50, y: 0.74 }, '5': { x: 0.68, y: 0.87 } }
+      { '1': { x: 0.64, y: 0.86 }, '2': { x: 0.78, y: 0.72 }, '3': { x: 0.50, y: 0.55 }, '4': { x: 0.22, y: 0.72 }, '5': { x: 0.50, y: 0.74 } },
+      { '1': { x: 0.50, y: 0.74 }, '2': { x: 0.68, y: 0.86 }, '3': { x: 0.82, y: 0.55 }, '4': { x: 0.76, y: 0.72 }, '5': { x: 0.22, y: 0.72 } },
+      { '1': { x: 0.22, y: 0.72 }, '2': { x: 0.50, y: 0.74 }, '3': { x: 0.68, y: 0.86 }, '4': { x: 0.78, y: 0.72 }, '5': { x: 0.50, y: 0.55 } },
+      { '1': { x: 0.76, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.50, y: 0.74 }, '4': { x: 0.68, y: 0.86 }, '5': { x: 0.82, y: 0.55 } },
+      { '1': { x: 0.78, y: 0.72 }, '2': { x: 0.22, y: 0.72 }, '3': { x: 0.16, y: 0.55 }, '4': { x: 0.50, y: 0.74 }, '5': { x: 0.68, y: 0.86 } }
     ];
 
     const awayReceiveFormations = homeReceiveFormations.map(rot => {
@@ -680,7 +717,6 @@
     ];
 
     function initCanvas() {
-      // Scale canvas resolution with device pixel ratio for retina screens
       const dpr = window.devicePixelRatio || 1;
       canvas.width = container.clientWidth * dpr;
       canvas.height = container.clientHeight * dpr;
@@ -741,10 +777,11 @@
       });
     }
 
+    /* Fixed Ball Positioning: Bottom Right safe zone */
     function setBallStaticPosition() {
       const rect = container.getBoundingClientRect();
-      ball.style.left = `${rect.width * 0.78}px`;
-      ball.style.top = `${rect.height * 0.93}px`;
+      ball.style.left = `${rect.width * 0.82}px`;
+      ball.style.top = `${rect.height * 0.90}px`;
     }
 
     function updateTeamPositions(team) {
@@ -761,24 +798,20 @@
 
     function setTeamStance(team, stance) {
       teamStances[team] = stance;
-
       document.getElementById(`${team}-btn-receive`).classList.toggle('active', stance === 'receive');
       document.getElementById(`${team}-btn-offense`).classList.toggle('active', stance === 'offense');
       document.getElementById(`${team}-btn-defense`).classList.toggle('active', stance === 'defense');
 
       const blkWrap = document.getElementById(`${team}-blk-wrap`);
       blkWrap.style.display = (stance === 'defense') ? 'flex' : 'none';
-
       updateTeamPositions(team);
     }
 
     function setBlockSide(team, side) {
       teamBlockSide[team] = side;
-
       ['left', 'mid', 'right'].forEach(s => {
         document.getElementById(`${team}-blk-${s}`).classList.toggle('active', s === side);
       });
-
       updateTeamPositions(team);
     }
 
@@ -843,7 +876,6 @@
     resetBtn.addEventListener('pointerdown', () => {
       didLongPress = false;
       resetWrapper.classList.add('charging');
-      
       resetTimer = setTimeout(() => {
         didLongPress = true;
         resetWrapper.classList.remove('charging');
@@ -899,7 +931,6 @@
       if (currentMode !== 'draw') return;
       isDrawing = true;
       const rect = canvas.getBoundingClientRect();
-      // Store relative coords (0.0 to 1.0) so drawings scale on resize/orientation switch
       currentStroke = [{
         rx: (e.clientX - rect.left) / rect.width,
         ry: (e.clientY - rect.top) / rect.height
@@ -914,7 +945,6 @@
         ry: (e.clientY - rect.top) / rect.height 
       };
       currentStroke.push(pt);
-
       redrawAllStrokes();
       renderSingleStroke({
         points: currentStroke,
@@ -1009,20 +1039,14 @@
     canvas.addEventListener('pointercancel', stopDraw);
 
     window.addEventListener('load', () => {
-      initCanvas();
+      recalculateLayout();
       fullMatchReset();
       makeDraggable(ball);
       setInteractionMode('move');
     });
 
-    // ResizeObserver cleanly updates canvas resolution and positions on screen rotation or iPad multitasking split
-    const resizeObserver = new ResizeObserver(() => {
-      initCanvas();
-      updateTeamPositions('away');
-      updateTeamPositions('home');
-      setBallStaticPosition();
-    });
-    resizeObserver.observe(container);
+    window.addEventListener('resize', recalculateLayout);
+    window.addEventListener('orientationchange', recalculateLayout);
   </script>
 </body>
 </html>
